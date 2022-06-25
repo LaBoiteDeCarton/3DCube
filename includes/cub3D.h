@@ -47,10 +47,21 @@ typedef struct s_map		t_map;
 typedef struct s_cube		t_cube;
 typedef struct s_img		t_img;
 typedef struct s_texture	t_texture;
+typedef struct s_menu		t_menu;
 
 t_cube	g_cube;
 
-// typedef enum e_
+typedef enum e_btn_content
+{
+	menu,
+	play,
+	select_level,
+	config,
+	quit,
+	retry,
+	back,
+	none
+}	t_btn_content;
 
 struct s_vect
 {
@@ -96,14 +107,26 @@ struct s_map
 	t_texture	textures;
 };
 
+struct	s_menu
+{
+	t_img			menu_bg;
+	t_img			menu_btn_on;
+	t_img			menu_btn_off;
+	t_btn_content	menu_curr;
+	short int		select;
+	short int		max_select;
+};
+
 struct s_cube
 {
-	t_map	curr_map;
-	void	*mlx;
-	void	*win;
-	void	*img;
-	int		key_state;
-	t_img	menu_bg;
+	t_map		curr_map;
+	t_menu		menu;
+	void		*mlx;
+	void		*win;
+	void		*img_onscreen;
+	void		*img_onload;
+	void		*img_ready;
+	int			key_state;
 };
 
 /*

@@ -42,7 +42,7 @@ static int key_release_hook(int keycode)
 	return (0);
 }
 
-static void	update_cube()
+static void	update_cube_data()
 {
 	if (bit_is_set(g_cube.key_state, B_Q))
 		move_left();
@@ -60,19 +60,28 @@ static void	update_cube()
 
 void	display_miniMap()
 {
-	// for (int i = 0; i < 10; i++)
-	// {
-	// 	for (int j = 0; j < 10; j++)
-	// 	if (g_cube.curr_map.map[i][j] == 1)
-	// 		mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.wall.ptr, j * g_cube.wall.img_width, i * g_cube.wall.img_height);
-	// }
-	// mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.wall.ptr, g_cube.curr_map.p_pos.x * g_cube.wall.img_width, g_cube.curr_map.p_pos.y * g_cube.wall.img_height);
-	// mlx_string_put(g_cube.mlx, g_cube.win, 100, 100, 125, "HELLO how are you?");
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		if (g_cube.curr_map.map[i][j] == 1)
+			mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.ptr, j * g_cube.curr_map.textures.n_wall.img_width, i * g_cube.curr_map.textures.n_wall.img_height);
+	}
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.ptr, g_cube.curr_map.p_pos.x * g_cube.curr_map.textures.n_wall.img_width, g_cube.curr_map.p_pos.y * g_cube.curr_map.textures.n_wall.img_height);
+}
+
+void	create_new_image()
+{
+	//g_cube.img_onload = mlx_
 }
 
 static int	loop_hook()
 {
-	update_cube();
+	update_cube_data();
+	create_new_img();
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.img_ready, 0, 0);
+	mlx_destroy_image(g_cube.mlx, g_cube.img_onscreen);
+	g_cube.img_onscreen = g_cube.img_ready;
+	g_cube.img_ready = NULL;
 	display_miniMap();
 	return (0);
 }

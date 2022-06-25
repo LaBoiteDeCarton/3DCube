@@ -16,7 +16,7 @@ LIBFT_DIRECTORY = lib/libft
 SRCS = $(foreach dir, ${SOURCE_DIRECTORY}, ${wildcard $(dir)/*.c})
 OBJS = ${SRCS:.c=.o}
 #	Compiler Flags
-COMPILER_FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+COMPILER_FLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
 INCLUDE_FLAGS = -I${HEADER_DIRECTORY}
 LIBRARY_FLAGS = -Llib/libft -lft -Llib/minilibx_opengl -lmlx -framework OpenGL -framework AppKit
 BONUS_FLAGS = -DBONUS
@@ -55,6 +55,7 @@ ${NAME_EXECUTABLE}: ${OBJS}
 	@make -C ${MINILIBX_DIRECTORY} >/dev/null 2>/dev/null && echo "${_GREEN}MinilibX compiled sucessfully" || echo "${_RED}MinilibX compileation failed"
 	@echo "${_YELLOW}Compiling Cub3D"
 	@gcc ${COMPILER_FLAGS} ${LIBRARY_FLAGS} ${OBJS} -o ${NAME_EXECUTABLE} && echo "${_GREEN}${NAME_EXECUTABLE} compiled sucessfully" || echo "${_RED}compilation failed"
+	@echo "${_END}"
 
 all: ${NAME_EXECUTABLE}
 

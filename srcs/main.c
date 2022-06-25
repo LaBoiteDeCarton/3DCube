@@ -65,8 +65,13 @@ int	main(int ac, char **av)
 	g_cube.key_state = 0;
 	g_cube.mlx = mlx_init();
 	g_cube.win = mlx_new_window(g_cube.mlx, RES_WIDTH, RES_HEIGHT, "42-Cube3D");
-	g_cube.img = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
-	g_cube.menu_bg.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/menu_bg.xpm", &g_cube.menu_bg.img_width, &g_cube.menu_bg.img_height);
+	//g_cube.img = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
+	g_cube.menu.menu_bg.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/menu_bg.xpm", &g_cube.menu.menu_bg.img_width, &g_cube.menu.menu_bg.img_height);
+	g_cube.menu.menu_btn_on.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Active.xpm", &g_cube.menu.menu_btn_on.img_width, &g_cube.menu.menu_btn_on.img_height);
+	g_cube.menu.menu_btn_off.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Normal.xpm", &g_cube.menu.menu_btn_off.img_width, &g_cube.menu.menu_btn_off.img_height);
+	g_cube.curr_map.textures.n_wall.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/wall.xpm", &g_cube.curr_map.textures.n_wall.img_width, &g_cube.curr_map.textures.n_wall.img_height);
+	g_cube.menu.menu_curr = menu;
+	g_cube.menu.max_select = 2;
 	loopMenu();
 	mlx_loop(g_cube.mlx);
 	system("leaks cub3D | grep leaked");
