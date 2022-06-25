@@ -9,14 +9,14 @@
 NAME_EXECUTABLE = cub3D
 #	Directory paths
 HEADER_DIRECTORY = includes
-SOURCE_DIRECTORY = srcs
+SOURCE_DIRECTORY = srcs srcs/dda srcs/errorHandler srcs/loops srcs/mlxAddons srcs/moves
 MINILIBX_DIRECTORY = lib/minilibx_opengl
 LIBFT_DIRECTORY = lib/libft
 #	File Objects
 SRCS = $(foreach dir, ${SOURCE_DIRECTORY}, ${wildcard $(dir)/*.c})
 OBJS = ${SRCS:.c=.o}
 #	Compiler Flags
-COMPILER_FLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
+COMPILER_FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 INCLUDE_FLAGS = -I${HEADER_DIRECTORY}
 LIBRARY_FLAGS = -Llib/libft -lft -Llib/minilibx_opengl -lmlx -framework OpenGL -framework AppKit
 BONUS_FLAGS = -DBONUS
@@ -74,5 +74,7 @@ bonus: ${OBJS}
 	@make -C ${MINILIBX_DIRECTORY}
 	@gcc ${COMPILER_FLAGS} ${BONUS_FLAGS} ${LIBRARY_FLAGS} ${OBJS} -o ${NAME_EXECUTABLE}
 
+run: ${NAME_EXECUTABLE}
+	./cub3D maps/simple_map.cub
 
 .PHONY: all, clean, fclean, re, bonus
