@@ -16,7 +16,7 @@ LIBFT_DIRECTORY = lib/libft
 SRCS = $(foreach dir, ${SOURCE_DIRECTORY}, ${wildcard $(dir)/*.c})
 OBJS = ${SRCS:.c=.o}
 #	Compiler Flags
-COMPILER_FLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
+COMPILER_FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 INCLUDE_FLAGS = -I${HEADER_DIRECTORY}
 LIBRARY_FLAGS = -Llib/libft -lft -Llib/minilibx_opengl -lmlx -framework OpenGL -framework AppKit
 BONUS_FLAGS = -DBONUS

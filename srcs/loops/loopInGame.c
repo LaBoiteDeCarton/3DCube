@@ -5,7 +5,6 @@
 
 static int	key_press_hook(int keycode)
 {
-
 	//printf("Key pressed : %d\n", keycode);
 	if( keycode == K_Q)
 		bit_set(g_cube.key_state, B_Q);
@@ -20,7 +19,7 @@ static int	key_press_hook(int keycode)
 	else if( keycode == K_A_RIGHT)
 		bit_set(g_cube.key_state, B_A_RIGHT);
 	else if (keycode == 53)
-		cube_exit();
+		cube_exit(EXIT_SUCCESS);
 	return (0);
 }
 
@@ -44,6 +43,7 @@ static int key_release_hook(int keycode)
 
 static void	update_cube_data()
 {
+	//atention si plusiurs key pressed, ca va deux fois plus vite, essayer davoir un "facteur de mouvement"
 	if (bit_is_set(g_cube.key_state, B_Q))
 		move_left();
 	if (bit_is_set(g_cube.key_state, B_D))
@@ -58,31 +58,51 @@ static void	update_cube_data()
 		rotate_right();
 }
 
+//temp
 void	display_miniMap()
 {
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		if (g_cube.curr_map.map[i][j] == 1)
-			mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.ptr, j * g_cube.curr_map.textures.n_wall.img_width, i * g_cube.curr_map.textures.n_wall.img_height);
+			mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.img_ptr, j * g_cube.curr_map.textures.n_wall.img_width, i * g_cube.curr_map.textures.n_wall.img_height);
 	}
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.ptr, g_cube.curr_map.p_pos.x * g_cube.curr_map.textures.n_wall.img_width, g_cube.curr_map.p_pos.y * g_cube.curr_map.textures.n_wall.img_height);
+	//mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.ptr, g_cube.curr_map.p_pos.x * g_cube.curr_map.textures.n_wall.img_width - g_cube.curr_map.textures.n_wall.img_width / 2, g_cube.curr_map.p_pos.y * g_cube.curr_map.textures.n_wall.img_height - g_cube.curr_map.textures.n_wall.img_height / 2);
 }
 
-void	create_new_image()
+static void	fill_cell_floor()
 {
-	//g_cube.img_onload = mlx_
+	int		adress;
+
+	adress = -1;
+	while (++adress < (g_cube.img_onload.sl / 4) * RES_HEIGHT / 2)
+		((unsigned int *)g_cube.img_onload.buffer)[adress] = g_cube.curr_map.textures.cell_color;
+	while (adress++ < (g_cube.img_onload.sl / 4) * (RES_HEIGHT - 1))
+		((unsigned int *)g_cube.img_onload.buffer)[adress] = g_cube.curr_map.textures.floor_color;
+}
+
+
+static void	create_new_frame()
+{
+	g_cube.img_onload.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
+	g_cube.img_onload.buffer = mlx_get_data_addr(g_cube.img_onload.img_ptr, &g_cube.img_onload.bpp, &g_cube.img_onload.sl, &g_cube.img_onload.endian);
+	fill_cell_floor();
+	raycast();
+	if (g_cube.img_ready.img_ptr)
+		mlx_destroy_image(g_cube.mlx, g_cube.img_ready.img_ptr);
+	g_cube.img_ready.img_ptr = g_cube.img_onload.img_ptr;
+	g_cube.img_onload.img_ptr = NULL;
 }
 
 static int	loop_hook()
 {
 	update_cube_data();
-	create_new_img();
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.img_ready, 0, 0);
-	mlx_destroy_image(g_cube.mlx, g_cube.img_onscreen);
-	g_cube.img_onscreen = g_cube.img_ready;
-	g_cube.img_ready = NULL;
-	display_miniMap();
+	create_new_frame();
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.img_ready.img_ptr, 0, 0);
+	mlx_destroy_image(g_cube.mlx, g_cube.img_onscreen.img_ptr);
+	g_cube.img_onscreen.img_ptr = g_cube.img_ready.img_ptr;
+	g_cube.img_ready.img_ptr = NULL;
+	//display_miniMap();
 	return (0);
 }
 
@@ -90,7 +110,6 @@ void	loopInGame()
 {
 	mlx_do_key_autorepeatoff(g_cube.mlx);
 	mlx_hook(g_cube.win, 2, 1L << 0, key_press_hook, NULL);
-	//mlx_hook(g_cube.win, 2, 1L << 0, key_press_hook2, NULL); overide l'event
 	mlx_hook(g_cube.win, 3, 1L << 1, key_release_hook, NULL);
 	mlx_loop_hook(g_cube.mlx, loop_hook, NULL);
 }

@@ -1,5 +1,6 @@
 #ifndef CUBE3D_H
 # define CUBE3D_H
+
 /* Arrow Key */
 # define K_A_LEFT 123
 # define K_A_RIGHT 124 
@@ -24,12 +25,14 @@
 /* Other */
 # define K_M 41
 # define K_C 8
+
 /* changement d'objet
 # define K_1 18
 # define K_2 19
 # define K_3 20
 # define K_4 21
 */
+
 # define K_ESC 53
 # define K_SPACE 49
 
@@ -46,6 +49,7 @@ typedef struct s_vect		t_vect;
 typedef struct s_map		t_map;
 typedef struct s_cube		t_cube;
 typedef struct s_img		t_img;
+typedef struct s_mlx_img	t_mlx_img;
 typedef struct s_texture	t_texture;
 typedef struct s_menu		t_menu;
 
@@ -76,14 +80,25 @@ struct s_img
 	int			img_height;
 };
 
+struct s_mlx_img
+{
+	void	*img_ptr;
+	void	*buffer;
+	int		bpp;
+	int		sl;
+	int		endian;
+	int		img_width;
+	int		img_height;
+};
+
 struct s_texture
 {
-	t_img	n_wall;
-	t_img	s_wall;
-	t_img	w_wall;
-	t_img	e_wall;
-	int		floor_color;
-	int		cell_color;
+	t_mlx_img	n_wall;
+	t_mlx_img	s_wall;
+	t_mlx_img	w_wall;
+	t_mlx_img	e_wall;
+	int			floor_color;
+	int			cell_color;
 };
 
 /*
@@ -95,6 +110,7 @@ struct s_texture
 // 	int		floor_color;
 // 	int		cell_color;
 // };
+
 
 struct s_map
 {
@@ -123,14 +139,28 @@ struct s_cube
 	t_menu		menu;
 	void		*mlx;
 	void		*win;
-	void		*img_onscreen;
-	void		*img_onload;
-	void		*img_ready;
+	t_mlx_img		img_onscreen;
+	t_mlx_img		img_onload;
+	t_mlx_img		img_ready;
+	t_mlx_img		mini_map;
 	int			key_state;
 };
 
 /*
+	Parsing function
+	- open file refered by pathfile
+	- fill info from file into t_map structure contained in g_cube
+	Return values :
+		- 0 : if something went wrong (unknown pathfile, access permission, not vaid info..)
+		- 1 : if parsing was sucessfull
+*/
+int		try_parse_file(char *pathfile);
+
+/*
 	Move functions
+	- Change the position of the player
+	Rotate functions
+	- Change the direction of the player
 */
 void	rotate_left();
 void	rotate_right();
@@ -141,12 +171,33 @@ void	move_forward();
 
 /*
 	Loop hooks seters
+		LoopMenu - setting all keyhook and loophook to display a beautiful menu
+		LoopInGame - setting all keyhook, mousehook and loophook to run the game
 */
 void	loopMenu();
 void	loopInGame();
 
+/*
+	raycasting functions
+
+*/
+void	raycast();
+
+
+/*
+	Exit funciton, called when 'Esc' key is pressed OR when QUIT is selected in menu
+	- Destroy all images (textures etc)
+	- Destroy map data stored in an int[][]
+	- Display leaks state
+	- Display quit the programm with Success value
+*/
 void	cube_exit();
 
+/*
+	Error displayer
+	- Display on error output in the folowing form :
+		Cub3D: <some custom message>: <perror message>
+*/
 void	handle_errors(char *message);
 
 #endif

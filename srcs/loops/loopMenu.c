@@ -24,7 +24,7 @@ static int	key_press_hook(int keycode)
 	else if( keycode == K_ENTER)
 		menu_select();
 	else if (keycode == 53)
-		cube_exit();
+		cube_exit(EXIT_SUCCESS);
 	return (0);
 }
 
