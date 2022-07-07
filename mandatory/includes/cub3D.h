@@ -120,6 +120,8 @@ int		try_parse_file(char *pathfile);
 	- Change the direction of the player
 	Rotate function with float parameter
 	- Change the direction of the player with 'angle' value (usefull for mouse rotation)
+	Collision Solver
+	- Put the player in the right position if his hitbox overflow on a wall
 */
 void	rotate_left();
 void	rotate_right();
@@ -128,6 +130,7 @@ void	move_left();
 void	move_right();
 void	move_backward();
 void	move_forward();
+void	collision_solver(float *add_to_x, float *add_to_y);
 
 /*
 	Loop hooks seters

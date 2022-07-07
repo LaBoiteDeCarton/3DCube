@@ -1,8 +1,0 @@
-Avoir plusiers loops
-- Loop Menu avec ces propres keyhooks
-- Loop inGame avec ses propres keyhooks
-
-Pas besoin de pointeurs de fonction, dans loopMenu on displayMenu, dans loopInGame on display la game
-
-Creer une fonction: void  mlx_put_img_to_img(dst, src)
-Creer une fonction de resize: new_img  img mlx_img_resize(img)

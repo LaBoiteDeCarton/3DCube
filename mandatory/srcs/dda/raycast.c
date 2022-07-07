@@ -152,6 +152,28 @@ void	put_coloumn_wall(t_vect *ray, t_vect pos, t_card card, int coloumn)
 	}
 }
 
+// TO DeLEETTTEE
+void	put_ray(t_vect w_pos, t_vect ray, int print_ray)
+{
+	(void)w_pos;
+	t_vect p_pos_c;
+
+	p_pos_c = g_cube.curr_map.p_pos;
+	((unsigned int *)g_cube.img_onload.buffer)[(int)(w_pos.y * (float)g_cube.curr_map.n_wall.img_height) * (g_cube.img_onload.sl / 4) + (int)(w_pos.x * (float)g_cube.curr_map.n_wall.img_width)] = 0x00ff0000;
+	if (!print_ray)
+		return ;
+	int i;
+	i = 0;
+	while (i < 1000)
+	{
+		p_pos_c.x += ray.x/100;
+		p_pos_c.y += ray.y/100;
+		if (p_pos_c.x >=0 && p_pos_c.x <= 9 && p_pos_c.y >= 0 && p_pos_c.y <= 9)
+			((unsigned int *)g_cube.img_onload.buffer)[(int)(p_pos_c.y * (float)g_cube.curr_map.n_wall.img_height) * (g_cube.img_onload.sl / 4) + (int)(p_pos_c.x * (float)g_cube.curr_map.n_wall.img_width)] = 0x000000c6;
+		i++;
+	}
+}
+
 void	raycast()
 {
 	t_vect	wall_hit;
@@ -170,6 +192,10 @@ void	raycast()
 		ray.y = g_cube.curr_map.p_dir.y + (i - RES_WIDTH / 2) * cam.y;
 		card = throw_ray_x(&wall_hit, ray);
 		card = throw_ray_y(&wall_hit, ray, card);
+		// if (! (i % 50))
+		// 	put_ray(wall_hit, ray, 1);
+		// else
+		// 	put_ray(wall_hit, ray, 0);
 		put_coloumn_wall(&ray, wall_hit, card, i);
 		i++;
 	}

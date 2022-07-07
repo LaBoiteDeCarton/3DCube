@@ -22,7 +22,6 @@ int		try_parse_file(char *pathfile)
 {
 	int		fd;
 	//char	*line;
-	int		valid_file;
 
 	fd = try_open_file(pathfile);
 	if (fd == -1)
@@ -57,6 +56,8 @@ int		try_parse_file(char *pathfile)
 	g_cube.curr_map.map[1][7] = 1;
 	g_cube.curr_map.map[2][3] = 1;
 	g_cube.curr_map.map[2][7] = 1;
+	g_cube.curr_map.map[7][7] = 1;
+	g_cube.curr_map.map[6][6] = 1;
 	g_cube.curr_map.map_width = 10;
 	g_cube.curr_map.map_height = 10;
 	g_cube.curr_map.p_pos.x = 5;
