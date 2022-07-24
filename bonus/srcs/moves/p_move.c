@@ -2,66 +2,53 @@
 
 void	move_left()
 {
-	float	new_posX;
-	float	new_posY;
+	float	add_to_x;
+	float	add_to_y;
 
-	new_posX = g_cube.curr_map.p_pos.x + g_cube.curr_map.p_dir.y * 5 / 70;
-	new_posY = g_cube.curr_map.p_pos.y - g_cube.curr_map.p_dir.x * 5 / 70;
-	if (! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX + 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX + 0.3)])
-	{
-		g_cube.curr_map.p_pos.x = new_posX;
-		g_cube.curr_map.p_pos.y	= new_posY;
-	}	
+	add_to_x = g_cube.curr_map.p_dir.y * 5 / 70;
+	add_to_y = - g_cube.curr_map.p_dir.x * 5 / 70;
+
+	collision_solver(&add_to_x, &add_to_y);
+	g_cube.curr_map.p_pos.x += add_to_x;
+	g_cube.curr_map.p_pos.y += add_to_y;
 	return ;
 }
 
 void	move_right()
 {
-	float	new_posX;
-	float	new_posY;
-	new_posX = g_cube.curr_map.p_pos.x - g_cube.curr_map.p_dir.y * 5 / 70;
-	new_posY = g_cube.curr_map.p_pos.y + g_cube.curr_map.p_dir.x * 5 / 70;
-	if (! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX + 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX + 0.3)])
-	{
-		g_cube.curr_map.p_pos.x = new_posX;
-		g_cube.curr_map.p_pos.y	= new_posY;
-	}	
+	float	add_to_x;
+	float	add_to_y;
+
+	add_to_x = - g_cube.curr_map.p_dir.y * 5 / 70;
+	add_to_y = g_cube.curr_map.p_dir.x * 5 / 70;
+
+	collision_solver(&add_to_x, &add_to_y);
+	g_cube.curr_map.p_pos.x += add_to_x;
+	g_cube.curr_map.p_pos.y += add_to_y;
 }
 
 void	move_backward()
 {
-	float	new_posX;
-	float	new_posY;
-	new_posX = g_cube.curr_map.p_pos.x - g_cube.curr_map.p_dir.x * 5 / 70;
-	new_posY = g_cube.curr_map.p_pos.y - g_cube.curr_map.p_dir.y * 5 / 70;
-	if (! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX + 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX + 0.3)])
-	{
-		g_cube.curr_map.p_pos.x = new_posX;
-		g_cube.curr_map.p_pos.y	= new_posY;
-	}	
+	float	add_to_x;
+	float	add_to_y;
+
+	add_to_x = - g_cube.curr_map.p_dir.x * 5 / 70;
+	add_to_y = - g_cube.curr_map.p_dir.y * 5 / 70;
+
+	collision_solver(&add_to_x, &add_to_y);
+	g_cube.curr_map.p_pos.x += add_to_x;
+	g_cube.curr_map.p_pos.y += add_to_y;
 }
 
 void	move_forward()
 {
-	float	new_posX;
-	float	new_posY;
-	new_posX = g_cube.curr_map.p_pos.x + g_cube.curr_map.p_dir.x * 5 / 70;
-	new_posY = g_cube.curr_map.p_pos.y + g_cube.curr_map.p_dir.y * 5 / 70;
-	if (! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY - 0.3)][(int)(new_posX + 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX - 0.3)]
-		&& ! g_cube.curr_map.map[(int)(new_posY + 0.3)][(int)(new_posX + 0.3)])
-	{
-		g_cube.curr_map.p_pos.x = new_posX;
-		g_cube.curr_map.p_pos.y	= new_posY;
-	}	
+	float	add_to_x;
+	float	add_to_y;
+
+	add_to_x = g_cube.curr_map.p_dir.x * 5 / 70;
+	add_to_y = g_cube.curr_map.p_dir.y * 5 / 70;
+
+	collision_solver(&add_to_x, &add_to_y);
+	g_cube.curr_map.p_pos.x += add_to_x;
+	g_cube.curr_map.p_pos.y += add_to_y;
 }

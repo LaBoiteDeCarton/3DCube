@@ -76,11 +76,11 @@ char	*get_str(t_btn_content content)
 
 void	display_menu()
 {
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_bg.ptr, 0, 0);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_bg.img_ptr, 0, 0);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
 	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 15, 200 + 5, 0x00babc, "menu");
 	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 15, 200 + 1 * 100 + 5, 0x00babc, "play");
 	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 60, 200 + 2 * 100 + 5, 0x00babc, "graphic options");
@@ -89,11 +89,11 @@ void	display_menu()
 
 void	display_graphic()
 {
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_bg.ptr, 0, 0);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_bg.img_ptr, 0, 0);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
 	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 75, 200 + 5, 0x00babc, "graphic options");
 	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 35, 200 + 1 * 100 + 5, 0x00babc, "640x480");
 	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 35, 200 + 2 * 100 + 5, 0x00babc, "960x720");

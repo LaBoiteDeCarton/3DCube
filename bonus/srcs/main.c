@@ -10,13 +10,12 @@ void	g_cube_set()
 	g_cube.key_state = 0;
 	g_cube.mlx = mlx_init();
 	g_cube.win = mlx_new_window(g_cube.mlx, RES_WIDTH, RES_HEIGHT, "42-Cube3D");
-	g_cube.img_onscreen.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
-	g_cube.img_onload.img_ptr = NULL;
-	g_cube.img_ready.img_ptr = NULL;
+	//g_cube.img_onscreen.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
+	
 	// Ici on met les valeurs par defaut du Menu
-	g_cube.menu.menu_bg.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/menu_bg.xpm", &g_cube.menu.menu_bg.img_width, &g_cube.menu.menu_bg.img_height);
-	g_cube.menu.menu_btn_on.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Active.xpm", &g_cube.menu.menu_btn_on.img_width, &g_cube.menu.menu_btn_on.img_height);
-	g_cube.menu.menu_btn_off.ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Normal.xpm", &g_cube.menu.menu_btn_off.img_width, &g_cube.menu.menu_btn_off.img_height);
+	g_cube.menu.menu_bg.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/menu_bg.xpm", &g_cube.menu.menu_bg.img_width, &g_cube.menu.menu_bg.img_height);
+	g_cube.menu.menu_btn_on.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Active.xpm", &g_cube.menu.menu_btn_on.img_width, &g_cube.menu.menu_btn_on.img_height);
+	g_cube.menu.menu_btn_off.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Normal.xpm", &g_cube.menu.menu_btn_off.img_width, &g_cube.menu.menu_btn_off.img_height);
 	g_cube.menu.menu_curr = menu;
 	g_cube.menu.max_select = 2;
 }

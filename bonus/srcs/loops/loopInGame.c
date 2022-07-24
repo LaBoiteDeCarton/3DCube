@@ -1,6 +1,7 @@
 #include "cub3D.h"
 #include <fcntl.h>
 #include <stdlib.h>
+#include <math.h>
 #include "mlx.h"
 
 static int	key_press_hook(int keycode)
@@ -65,16 +66,93 @@ static void	update_cube_data()
 	rotate((x_mouse - (RES_WIDTH / 2)) * 0.005);
 }
 
-//temp
+static void	borders(t_mlx_img image)
+{
+	int adress;
+
+	adress = -1;
+	while (++adress < (image.sl / 4) * 2)
+		((unsigned int *)image.buffer)[adress] = 0x00555555;
+	adress = (image.sl / 4) * 2;
+	while (adress < (image.sl / 4) * image.img_height)
+	{	
+		((unsigned int *)image.buffer)[adress] = 0x00555555;
+		((unsigned int *)image.buffer)[adress + 1] = 0x00555555;
+		((unsigned int *)image.buffer)[adress - 1] = 0x00aaaaaa;
+		((unsigned int *)image.buffer)[adress - 2] = 0x00aaaaaa;
+		adress += image.sl / 4;
+	}
+	adress = (image.sl / 4) * (image.img_height - 2);
+	while (++adress <= (image.sl / 4) * (image.img_height))
+		((unsigned int *)image.buffer)[adress - 1] = 0x00aaaaaa;
+}
+
+void	fill_image(t_mlx_img img, int color)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < img.img_height)
+	{
+		x = 0;
+		while (x < img.img_width)
+		{
+			((unsigned int *)img.buffer)[y * (img.sl / 4) + x] = color;
+			x++;
+		}
+		y++;
+	}
+}
+
 void	display_miniMap()
 {
-	for (int i = 0; i < 10; i++)
+	t_mlx_img img;
+	t_vect	p_pos;
+	int x;
+	int	y;
+	int i;
+
+	img.img_height = (RES_HEIGHT - 50) / 5;
+	img.img_width = (RES_HEIGHT - 50) / 5;
+	img.img_ptr = mlx_new_image(g_cube.mlx, img.img_height, img.img_width);
+	img.buffer = mlx_get_data_addr(img.img_ptr, &img.bpp, &img.sl, &img.endian);
+	fill_image(img, 0x00323232);
+	((unsigned int *)img.buffer)[img.img_height / 2 * (img.sl / 4) + img.img_width / 2] = 0x00883030;
+	((unsigned int *)img.buffer)[img.img_height / 2 * (img.sl / 4) + img.img_width / 2 - 1] = 0x00883030;
+	((unsigned int *)img.buffer)[img.img_height / 2 * (img.sl / 4) + img.img_width / 2 + 1] = 0x00883030;
+	((unsigned int *)img.buffer)[(img.img_height / 2 - 1) * (img.sl / 4) + img.img_width / 2] = 0x00883030;
+	((unsigned int *)img.buffer)[(img.img_height / 2 + 1) * (img.sl / 4) + img.img_width / 2] = 0x00883030;
+	p_pos.x = img.img_width / 2;
+	p_pos.y = img.img_height / 2;
+	i = 0;
+	while (i < 100)
 	{
-		for (int j = 0; j < 10; j++)
-		if (g_cube.curr_map.map[i][j] == 1)
-			mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.img_ptr, j * g_cube.curr_map.textures.n_wall.img_width, i * g_cube.curr_map.textures.n_wall.img_height);
+		p_pos.x += g_cube.curr_map.p_dir.x/10;
+		p_pos.y += g_cube.curr_map.p_dir.y/10;
+		((unsigned int *)img.buffer)[(int)p_pos.y * (img.sl / 4) + (int)p_pos.x] = 0x00883030;
+		i++;
 	}
-	//mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.curr_map.textures.n_wall.ptr, g_cube.curr_map.p_pos.x * g_cube.curr_map.textures.n_wall.img_width - g_cube.curr_map.textures.n_wall.img_width / 2, g_cube.curr_map.p_pos.y * g_cube.curr_map.textures.n_wall.img_height - g_cube.curr_map.textures.n_wall.img_height / 2);
+	y = 0;
+	while (y < img.img_height)
+	{
+		x = 0;
+		while (x < img.img_width)
+		{
+			if (floorf(g_cube.curr_map.p_pos.y - (float)img.img_height / 20 + (float)y / 10) >= 0.
+				&& (int)(g_cube.curr_map.p_pos.y - (float)img.img_height / 20 + (float)y / 10) < g_cube.curr_map.map_height
+				&& floorf(g_cube.curr_map.p_pos.x - (float)img.img_width / 20 + (float)x / 10) >= 0.
+				&& (int)(g_cube.curr_map.p_pos.x - (float)img.img_width / 20 + (float)x / 10) < g_cube.curr_map.map_width
+				&& g_cube.curr_map.map[(int)(g_cube.curr_map.p_pos.y - (float)img.img_height / 20 + (float)y / 10)][(int)(g_cube.curr_map.p_pos.x - (float)img.img_width / 20 + (float)x / 10)])
+				((unsigned int *)img.buffer)[y * (img.sl / 4) + x] = 0x0066AABB;
+			x++;
+		}
+		y++;
+	}
+	
+	borders(img);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, RES_WIDTH - 25 - img.img_width, RES_HEIGHT * 4 / 5);
+	mlx_destroy_image(g_cube.mlx, img.img_ptr);
 }
 
 static void	fill_cell_floor()
@@ -82,23 +160,35 @@ static void	fill_cell_floor()
 	int		adress;
 
 	adress = -1;
-	while (++adress < (g_cube.img_onload.sl / 4) * RES_HEIGHT / 2)
-		((unsigned int *)g_cube.img_onload.buffer)[adress] = g_cube.curr_map.textures.cell_color;
-	while (adress++ < (g_cube.img_onload.sl / 4) * (RES_HEIGHT - 1))
-		((unsigned int *)g_cube.img_onload.buffer)[adress] = g_cube.curr_map.textures.floor_color;
+	while (++adress < (g_cube.img_raycast.sl / 4) * g_cube.img_raycast.img_height / 2)
+		((unsigned int *)g_cube.img_raycast.buffer)[adress] = g_cube.curr_map.cell_color;
+	while (adress++ <= (g_cube.img_raycast.sl / 4) * (g_cube.img_raycast.img_height))
+		((unsigned int *)g_cube.img_raycast.buffer)[adress] = g_cube.curr_map.floor_color;
 }
 
-
-static void	create_new_frame()
+static void	fill_background()
 {
-	g_cube.img_onload.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
-	g_cube.img_onload.buffer = mlx_get_data_addr(g_cube.img_onload.img_ptr, &g_cube.img_onload.bpp, &g_cube.img_onload.sl, &g_cube.img_onload.endian);
+	t_mlx_img	img;
+	int			adress;
+
+	img.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
+	img.buffer = mlx_get_data_addr(img.img_ptr, &img.bpp, &img.sl, &img.endian);
+	adress = -1;
+	while (++adress <= (img.sl / 4) * (RES_HEIGHT))
+		((unsigned int *)img.buffer)[adress - 1] = 0x00bbbbbb;
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, 0, 0);
+	mlx_destroy_image(g_cube.mlx, img.img_ptr);
+}
+
+static void	create_raycast_img()
+{
+	g_cube.img_raycast.img_width = RES_WIDTH - 50;
+	g_cube.img_raycast.img_height = (RES_HEIGHT - 50) * 4 / 5;
+	g_cube.img_raycast.img_ptr = mlx_new_image(g_cube.mlx, g_cube.img_raycast.img_width, g_cube.img_raycast.img_height);
+	g_cube.img_raycast.buffer = mlx_get_data_addr(g_cube.img_raycast.img_ptr, &g_cube.img_raycast.bpp, &g_cube.img_raycast.sl, &g_cube.img_raycast.endian);
 	fill_cell_floor();
-	raycast();
-	if (g_cube.img_ready.img_ptr)
-		mlx_destroy_image(g_cube.mlx, g_cube.img_ready.img_ptr);
-	g_cube.img_ready.img_ptr = g_cube.img_onload.img_ptr;
-	g_cube.img_onload.img_ptr = NULL;
+	raycast(g_cube.img_raycast);
+	borders(g_cube.img_raycast);
 }
 
 #include "libft.h"
@@ -106,14 +196,11 @@ static void	create_new_frame()
 static int	loop_hook()
 {
 	update_cube_data();
-	create_new_frame();
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.img_ready.img_ptr, 0, 0);
-	mlx_destroy_image(g_cube.mlx, g_cube.img_onscreen.img_ptr);
-	g_cube.img_onscreen.img_ptr = g_cube.img_ready.img_ptr;
-	g_cube.img_ready.img_ptr = NULL;
-	mlx_string_put(g_cube.mlx, g_cube.win, 50, 50, 0xffffff, ft_itoa((int)g_cube.curr_map.p_pos.x));
-	mlx_string_put(g_cube.mlx, g_cube.win, 50, 100, 0xffffff, ft_itoa((int)g_cube.curr_map.p_pos.y));
-	//display_miniMap();
+	fill_background();
+	create_raycast_img();
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.img_raycast.img_ptr, 25, 25);
+	mlx_destroy_image(g_cube.mlx, g_cube.img_raycast.img_ptr);
+	display_miniMap();
 	return (0);
 }
 

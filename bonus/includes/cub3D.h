@@ -48,7 +48,8 @@
 typedef struct s_vect		t_vect;
 typedef struct s_map		t_map;
 typedef struct s_cube		t_cube;
-typedef struct s_img		t_img;
+typedef struct s_walls		t_walls;
+typedef struct s_obj		t_obj;
 typedef struct s_mlx_img	t_mlx_img;
 typedef struct s_texture	t_texture;
 typedef struct s_menu		t_menu;
@@ -67,26 +68,10 @@ typedef enum e_btn_content
 	none
 }	t_btn_content;
 
-typedef enum e_card
-{
-	nord,
-	south,
-	east,
-	west,
-	unknown
-} t_card;
-
 struct s_vect
 {
 	float	x;
 	float	y;
-};
-
-struct s_img
-{
-	void		*ptr;
-	int			img_width;
-	int			img_height;
 };
 
 struct s_mlx_img
@@ -100,25 +85,23 @@ struct s_mlx_img
 	int		img_height;
 };
 
-struct s_texture
+struct s_walls
 {
-	t_mlx_img	n_wall;
-	t_mlx_img	s_wall;
-	t_mlx_img	w_wall;
-	t_mlx_img	e_wall;
-	int			floor_color;
-	int			cell_color;
+	short		id;
+	t_mlx_img	txtr;
+	t_walls		*next;
 };
 
-/*
-	Si bonus :
-*/
-// struct s_texture
-// {
-// 	t_list	*walls;
-// 	int		floor_color;
-// 	int		cell_color;
-// };
+struct s_obj
+{
+	short		id;
+	t_vect		pos;
+	float		rayon;
+	float		v_pos;
+	int			transparency;
+	t_mlx_img	txtr;
+	t_obj		*next;
+};
 
 
 struct s_map
@@ -129,14 +112,17 @@ struct s_map
 	t_vect		s_dir;
 	int			map_width;
 	int			map_height;
-	t_texture	textures;
+	int			floor_color;
+	int			cell_color;
+	t_walls		*w_txtr;
+	t_obj		*obj;
 };
 
 struct	s_menu
 {
-	t_img			menu_bg;
-	t_img			menu_btn_on;
-	t_img			menu_btn_off;
+	t_mlx_img		menu_bg;
+	t_mlx_img		menu_btn_on;
+	t_mlx_img		menu_btn_off;
 	t_btn_content	menu_curr;
 	short int		select;
 	short int		max_select;
@@ -150,10 +136,8 @@ struct s_cube
 	t_menu		menu;
 	void		*mlx;
 	void		*win;
-	t_mlx_img		img_onscreen;
-	t_mlx_img		img_onload;
-	t_mlx_img		img_ready;
-	t_mlx_img		mini_map;
+	t_mlx_img	img_raycast;
+	t_mlx_img	mini_map;
 	int			key_state;
 };
 
@@ -172,6 +156,10 @@ int		try_parse_file(char *pathfile);
 	- Change the position of the player
 	Rotate functions
 	- Change the direction of the player
+	Rotate function with float parameter
+	- Change the direction of the player with 'angle' value (usefull for mouse rotation)
+	Collision Solver
+	- Put the player in the right position if his hitbox overflow on a wall
 */
 void	rotate_left();
 void	rotate_right();
@@ -180,6 +168,7 @@ void	move_left();
 void	move_right();
 void	move_backward();
 void	move_forward();
+void	collision_solver(float *add_to_x, float *add_to_y);
 
 /*
 	Loop hooks seters
