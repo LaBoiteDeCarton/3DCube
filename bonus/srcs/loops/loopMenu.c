@@ -6,32 +6,15 @@
 #include <stdio.h>
 # define GENERIC_MAX(x, y) ((x) > (y) ? (x) : (y))
 
-void	change_res_to_small()
+void menu_select();
+
+int key_release_hook(int keycode)
 {
-	return ;
-}
-void	change_res_to_big()
-{
-	return ;
+	(void)keycode;
+	return (0);
 }
 
-static void	menu_select()
-{
-	if (g_cube.menu.menu_curr == menu && g_cube.menu.select == 2)
-		cube_exit();
-	if (g_cube.menu.menu_curr == menu && g_cube.menu.select == 0)
-		loopInGame();
-	if (g_cube.menu.menu_curr == menu && g_cube.menu.select == 1)
-		g_cube.menu.menu_curr = config;
-	if (g_cube.menu.menu_curr == config && g_cube.menu.select == 2)
-		g_cube.menu.menu_curr = menu;
-	if (g_cube.menu.menu_curr == config && g_cube.menu.select == 0)
-		change_res_to_small();
-	if (g_cube.menu.menu_curr == config && g_cube.menu.select == 1)
-		change_res_to_big();
-}
-
-static int	key_press_hook(int keycode)
+int	key_press_hook(int keycode)
 {
 	printf("Key pressed : %d\n", keycode);
 	if( keycode == K_A_UP)
@@ -49,58 +32,68 @@ static int	key_press_hook(int keycode)
 	return (0);
 }
 
-static int key_release_hook(int keycode)
+void	change_res_to_small()
 {
-	(void)keycode;
-	return (0);
+	g_cube.res_width = 640;
+	g_cube.res_height = 480;
+	mlx_destroy_window(g_cube.mlx, g_cube.win);
+	g_cube.win = mlx_new_window(g_cube.mlx, g_cube.res_width, g_cube.res_height, "42-Cube3D");
+	loopMenu();
+	return ;
+}
+void	change_res_to_big()
+{
+	g_cube.res_width = 960;
+	g_cube.res_height = 720;
+	mlx_destroy_window(g_cube.mlx, g_cube.win);
+	g_cube.win = mlx_new_window(g_cube.mlx, g_cube.res_width, g_cube.res_height, "42-Cube3D");
+	loopMenu();
+	return ;
 }
 
-char	*get_str(t_btn_content content)
+void	menu_select()
 {
-	if (content == menu)
-		return (ft_strdup("menu"));
-	if (content == play)
-		return (ft_strdup("play"));
-	if (content == quit)
-		return (ft_strdup("quit"));
-	if (content == select_level)
-		return (ft_strdup("select_level"));
-	if (content == retry)
-		return (ft_strdup("retry"));
-	if (content == back)
-		return (ft_strdup("back"));
-	if (content == config)
-		return (ft_strdup("config"));
-	return (ft_strdup("none"));
+	if (g_cube.menu.menu_curr == menu && g_cube.menu.select == 2)
+		cube_exit(0);
+	else if (g_cube.menu.menu_curr == menu && g_cube.menu.select == 0)
+		loopInGame();
+	else if (g_cube.menu.menu_curr == menu && g_cube.menu.select == 1)
+		g_cube.menu.menu_curr = config;
+	else if (g_cube.menu.menu_curr == config && g_cube.menu.select == 2)
+		g_cube.menu.menu_curr = menu;
+	else if (g_cube.menu.menu_curr == config && g_cube.menu.select == 0)
+		change_res_to_small();
+	else if (g_cube.menu.menu_curr == config && g_cube.menu.select == 1)
+		change_res_to_big();
 }
 
 void	display_menu()
 {
 	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_bg.img_ptr, 0, 0);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 15, 200 + 5, 0x00babc, "menu");
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 15, 200 + 1 * 100 + 5, 0x00babc, "play");
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 60, 200 + 2 * 100 + 5, 0x00babc, "graphic options");
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 15, 200 + 3 * 100 + 5, 0x00babc, "quit");
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 15, 200 + 5, 0x00babc, "menu");
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 15, 200 + 1 * 100 + 5, 0x00babc, "play");
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 60, 200 + 2 * 100 + 5, 0x00babc, "graphic options");
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 15, 200 + 3 * 100 + 5, 0x00babc, "quit");
 }
 
 void	display_graphic()
 {
 	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_bg.img_ptr, 0, 0);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.img_ptr, RES_WIDTH/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 75, 200 + 5, 0x00babc, "graphic options");
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 35, 200 + 1 * 100 + 5, 0x00babc, "640x480");
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 35, 200 + 2 * 100 + 5, 0x00babc, "960x720");
-	mlx_string_put(g_cube.mlx, g_cube.win, RES_WIDTH/2 - 20, 200 + 3 * 100 + 5, 0x00babc, "back");
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 1 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 2 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_off.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_off.img_width / 2, 200 + 3 * 100 - g_cube.menu.menu_btn_off.img_height / 2);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.menu.menu_btn_on.img_ptr, g_cube.res_width/2 - g_cube.menu.menu_btn_on.img_width / 2, 200 + (1 + g_cube.menu.select) * 100 - g_cube.menu.menu_btn_on.img_height / 2);
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 75, 200 + 5, 0x00babc, "graphic options");
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 35, 200 + 1 * 100 + 5, 0x00babc, "640x480");
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 35, 200 + 2 * 100 + 5, 0x00babc, "960x720");
+	mlx_string_put(g_cube.mlx, g_cube.win, g_cube.res_width/2 - 20, 200 + 3 * 100 + 5, 0x00babc, "back");
 }
 
-static int	loop_hook()
+int	loop_hook()
 {
 	if (g_cube.menu.menu_curr == menu)
 		display_menu();
@@ -109,9 +102,18 @@ static int	loop_hook()
 	return (0);
 }
 
+int		close_win()
+{
+	cube_exit(EXIT_SUCCESS);
+	return (1);
+}
+
 void	loopMenu()
 {
+	mlx_do_key_autorepeaton(g_cube.mlx);
+	mlx_mouse_show();
 	mlx_hook(g_cube.win, 2, 1L << 0, key_press_hook, NULL);
 	mlx_hook(g_cube.win, 3, 1L << 1, key_release_hook, NULL);
+	mlx_hook(g_cube.win, 17, 0L, &close_win, NULL);
 	mlx_loop_hook(g_cube.mlx, loop_hook, NULL);
 }

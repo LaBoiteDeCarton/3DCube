@@ -17,10 +17,12 @@
 # define K_S 1
 # define K_D 2
 # define K_Z 13
+# define K_E 14
 # define B_Q 0
 # define B_S 1
 # define B_D 2
 # define B_Z 3
+# define B_E 8
 
 /* Other */
 # define K_M 41
@@ -37,13 +39,15 @@
 # define K_SPACE 49
 
 /* Hard coding the resolution */
-# define RES_WIDTH 960
-# define RES_HEIGHT 720
+// # define RES_WIDTH 960
+// # define RES_HEIGHT 720
 
 /* Bit Set/Unset/Get Macro */
 # define bit_is_set(byte,pos) ((byte) & (1 << pos))
 # define bit_set(byte, pos)	((byte) |= (1 << pos))
 # define bit_unset(byte, pos) ((byte) ^= (1 << pos))
+
+#include <sys/time.h>
 
 typedef struct s_vect		t_vect;
 typedef struct s_map		t_map;
@@ -53,8 +57,10 @@ typedef struct s_obj		t_obj;
 typedef struct s_mlx_img	t_mlx_img;
 typedef struct s_texture	t_texture;
 typedef struct s_menu		t_menu;
+typedef struct s_obj_hit	t_obj_hit;
 
 t_cube	g_cube;
+
 
 typedef enum e_btn_content
 {
@@ -72,6 +78,13 @@ struct s_vect
 {
 	float	x;
 	float	y;
+};
+
+struct s_obj_hit
+{
+	int			obj_id;
+	t_vect		hit_pos;
+	t_obj_hit	*next;
 };
 
 struct s_mlx_img
@@ -92,11 +105,26 @@ struct s_walls
 	t_walls		*next;
 };
 
+typedef enum e_otype
+{
+	v_wall,
+	h_wall,
+	v_door,
+	h_door,
+	sprite,
+	rien,
+} t_otype;
+
 struct s_obj
 {
 	short		id;
+	t_otype		type;
+	t_vect		start_pos;
 	t_vect		pos;
-	float		rayon;
+	t_vect		move_dir;
+	struct timeval time;
+	int			bool_move;
+	float		size;
 	float		v_pos;
 	int			transparency;
 	t_mlx_img	txtr;
@@ -131,8 +159,8 @@ struct	s_menu
 struct s_cube
 {
 	t_map		curr_map;
-	int			map_width;
-	int			map_height;
+	int			res_width;
+	int			res_height;
 	t_menu		menu;
 	void		*mlx;
 	void		*win;
@@ -192,7 +220,7 @@ void	raycast();
 	- Display leaks state
 	- Display quit the programm with Success value
 */
-void	cube_exit();
+void	cube_exit(int exit_status);
 
 /*
 	Error displayer
@@ -200,5 +228,8 @@ void	cube_exit();
 		Cub3D: <some custom message>: <perror message>
 */
 void	handle_errors(char *message);
+
+/* to comment */
+unsigned int	get_time(struct timeval tstart);
 
 #endif

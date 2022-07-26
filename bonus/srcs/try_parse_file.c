@@ -3,6 +3,8 @@
 #include "libft.h"
 #include <fcntl.h>
 
+#include <stdio.h>
+
 int		try_parse_file(char *pathfile)
 {
 	int		fd;
@@ -47,7 +49,6 @@ int		try_parse_file(char *pathfile)
 	g_cube.curr_map.map[2][3] = 1;
 	g_cube.curr_map.map[2][7] = 3;
 	g_cube.curr_map.map[2][5] = 1;
-	g_cube.curr_map.map[2][4] = 3;
 	g_cube.curr_map.map_width = 10;
 	g_cube.curr_map.map_height = 10;
 	g_cube.curr_map.p_pos.x = 5;
@@ -64,6 +65,8 @@ int		try_parse_file(char *pathfile)
 	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/TECH_2A.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
 	wall_ptr->txtr.buffer = mlx_get_data_addr(wall_ptr->txtr.img_ptr, &wall_ptr->txtr.bpp, &wall_ptr->txtr.sl, &wall_ptr->txtr.endian);
 
+
+
 	wall_ptr->next = malloc(sizeof(t_walls));
 	wall_ptr = wall_ptr->next;
 	wall_ptr->id = 2;
@@ -71,12 +74,89 @@ int		try_parse_file(char *pathfile)
 	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/TECH_3E.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
 	wall_ptr->txtr.buffer = mlx_get_data_addr(wall_ptr->txtr.img_ptr, &wall_ptr->txtr.bpp, &wall_ptr->txtr.sl, &wall_ptr->txtr.endian);
 	
+
+
 	wall_ptr->next = malloc(sizeof(t_walls));
 	wall_ptr = wall_ptr->next;
 	wall_ptr->id = 3;
 	wall_ptr->next = NULL;
-	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/CRATE_1E.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
+	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/TECH_2A.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
 	wall_ptr->txtr.buffer = mlx_get_data_addr(wall_ptr->txtr.img_ptr, &wall_ptr->txtr.bpp, &wall_ptr->txtr.sl, &wall_ptr->txtr.endian);
+
+
+	// g_cube.curr_map.obj = NULL;
+	t_obj	*obj;
+	g_cube.curr_map.obj = malloc(sizeof(t_obj));
+	obj = g_cube.curr_map.obj;
+	obj->next = NULL;
+	obj->type = h_door;
+	obj->id = 42;
+	obj->size = 1;
+	obj->pos.x = 4.5;
+	obj->pos.y = 2.5;
+	obj->start_pos.x = 4.5;
+	obj->start_pos.y = 2.5;
+	obj->bool_move = 0;
+	obj->move_dir.x = -1;
+	obj->move_dir.y = 0;
+	obj->txtr.img_ptr = NULL;
+	obj->txtr.buffer = NULL;
+	obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/LIGHT_1B.xpm", &obj->txtr.img_width, &obj->txtr.img_height);
+	obj->txtr.buffer = mlx_get_data_addr(obj->txtr.img_ptr, &obj->txtr.bpp, &obj->txtr.sl, &obj->txtr.endian);
+	
+	obj->next = malloc(sizeof(t_obj));
+	obj = obj->next;
+	obj->next = NULL;
+	obj->type = h_door;
+	obj->id = 43;
+	obj->size = 1;
+	obj->pos.x = 6.5;
+	obj->pos.y = 2.5;
+	obj->start_pos.x = 6.5;
+	obj->start_pos.y = 2.5;
+	obj->bool_move = 0;
+	obj->move_dir.x = -1;
+	obj->move_dir.y = 0;
+	obj->txtr.img_ptr = NULL;
+	obj->txtr.buffer = NULL;
+	obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/DOOR_WIND.xpm", &obj->txtr.img_width, &obj->txtr.img_height);
+	obj->txtr.buffer = mlx_get_data_addr(obj->txtr.img_ptr, &obj->txtr.bpp, &obj->txtr.sl, &obj->txtr.endian);
+
+	obj->next = malloc(sizeof(t_obj));
+	obj = obj->next;
+	obj->next = NULL;
+	obj->type = sprite;
+	obj->id = 44;
+	obj->size = 1;
+	obj->pos.x = 2;
+	obj->pos.y = 2;
+	obj->start_pos.x = 2;
+	obj->start_pos.y = 2;
+	obj->bool_move = 0;
+	obj->move_dir.x = 0;
+	obj->move_dir.y = 0;
+	obj->txtr.img_ptr = NULL;
+	obj->txtr.buffer = NULL;
+	obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/greenlight.xpm", &obj->txtr.img_width, &obj->txtr.img_height);
+	obj->txtr.buffer = mlx_get_data_addr(obj->txtr.img_ptr, &obj->txtr.bpp, &obj->txtr.sl, &obj->txtr.endian);
+
+	obj->next = malloc(sizeof(t_obj));
+	obj = obj->next;
+	obj->next = NULL;
+	obj->type = sprite;
+	obj->id = 45;
+	obj->size = 1;
+	obj->pos.x = 8.5;
+	obj->pos.y = 3.5;
+	obj->start_pos.x = 8.5;
+	obj->start_pos.y = 3.5;
+	obj->bool_move = 0;
+	obj->move_dir.x = 0;
+	obj->move_dir.y = 0;
+	obj->txtr.img_ptr = NULL;
+	obj->txtr.buffer = NULL;
+	obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/pillar.xpm", &obj->txtr.img_width, &obj->txtr.img_height);
+	obj->txtr.buffer = mlx_get_data_addr(obj->txtr.img_ptr, &obj->txtr.bpp, &obj->txtr.sl, &obj->txtr.endian);
 	// wall_ptr->next = malloc(sizeof(t_walls));
 	// wall_ptr = wall_ptr->next;
 	// wall_ptr->id = 255;
@@ -91,8 +171,8 @@ int		try_parse_file(char *pathfile)
 	// wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/mossy.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
 	// wall_ptr->txtr.buffer = mlx_get_data_addr(wall_ptr->txtr.img_ptr, &wall_ptr->txtr.bpp, &wall_ptr->txtr.sl, &wall_ptr->txtr.endian);
 	//on doit set aussi les couleurs de floor et cell
-	g_cube.curr_map.cell_color = 0x00aaaaaa;
-	g_cube.curr_map.floor_color = 0x00303030;
+	g_cube.curr_map.floor_color = 0x00aaaaaa;
+	g_cube.curr_map.cell_color = 0x00303030;
 
 	//On renvoi 1 si aucune erreur est rencontré. Dans le cas contraire handle error est utilisé et un code retour 0 est envoyé par la fonction
 	return (1);

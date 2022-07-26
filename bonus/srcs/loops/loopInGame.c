@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "mlx.h"
+#include <sys/time.h>
 
 static int	key_press_hook(int keycode)
 {
@@ -19,6 +20,8 @@ static int	key_press_hook(int keycode)
 		bit_set(g_cube.key_state, B_A_LEFT);
 	else if( keycode == K_A_RIGHT)
 		bit_set(g_cube.key_state, B_A_RIGHT);
+	else if( keycode == K_E)
+		bit_set(g_cube.key_state, B_E);
 	else if ( keycode == K_M)
 		loopMenu();
 	else if (keycode == 53)
@@ -41,7 +44,57 @@ static int key_release_hook(int keycode)
 		bit_unset(g_cube.key_state, B_A_LEFT);
 	else if( keycode == K_A_RIGHT)
 		bit_unset(g_cube.key_state, B_A_RIGHT);
+	else if( keycode == K_E)
+		bit_unset(g_cube.key_state, B_E);
 	return (0);
+}
+
+static void make_movable_obj_move()
+{
+	t_obj *obj_ptr;
+
+	obj_ptr = g_cube.curr_map.obj;
+	while (obj_ptr)
+	{
+		if (obj_ptr->bool_move && (fabs(obj_ptr->start_pos.x - obj_ptr->pos.x) > fabs(obj_ptr->move_dir.x)
+			|| fabs(obj_ptr->start_pos.y - obj_ptr->pos.y) > fabs(obj_ptr->move_dir.y)))
+		{
+			obj_ptr->bool_move = 0;
+			gettimeofday(&obj_ptr->time, NULL);
+		}
+		if (obj_ptr->bool_move)
+		{
+			//ici utiliser time
+			obj_ptr->pos.x += obj_ptr->move_dir.x / 20;
+			obj_ptr->pos.y += obj_ptr->move_dir.y / 20;
+		}
+		else if (get_time(obj_ptr->time) > 4000000
+			&& (obj_ptr->pos.x != obj_ptr->start_pos.x
+				|| obj_ptr->pos.y != obj_ptr->start_pos.y))
+		{
+			obj_ptr->pos.x -= obj_ptr->move_dir.x / 20;
+			obj_ptr->pos.y -= obj_ptr->move_dir.y / 20;
+		}
+		obj_ptr = obj_ptr->next;
+	}
+}
+
+static void change_move_state_obj()
+{
+	t_obj *obj_ptr;
+	t_vect	player_pos;
+
+	obj_ptr = g_cube.curr_map.obj;
+	player_pos = g_cube.curr_map.p_pos;
+	while (obj_ptr)
+	{
+		if (player_pos.x - obj_ptr->pos.x <= 1.5 
+			&& player_pos.x - obj_ptr->pos.x >= -1.5
+			&& player_pos.y - obj_ptr->pos.y <= 1.5 
+			&& player_pos.y - obj_ptr->pos.y >= -1.5)
+			obj_ptr->bool_move = 1;
+		obj_ptr = obj_ptr->next;
+	}
 }
 
 static void	update_cube_data()
@@ -61,9 +114,12 @@ static void	update_cube_data()
 		rotate_left();
 	if (bit_is_set(g_cube.key_state, B_A_RIGHT) && ! bit_is_set(g_cube.key_state, B_A_LEFT))
 		rotate_right();
+	if (bit_is_set(g_cube.key_state, B_E))
+		change_move_state_obj();
+	make_movable_obj_move();
 	mlx_mouse_get_pos(g_cube.win, &x_mouse, &y_mouse);
-	mlx_mouse_move(g_cube.win, RES_WIDTH / 2, RES_HEIGHT / 2);
-	rotate((x_mouse - (RES_WIDTH / 2)) * 0.005);
+	mlx_mouse_move(g_cube.win, g_cube.res_width / 2, g_cube.res_height / 2);
+	rotate((x_mouse - (g_cube.res_width / 2)) * 0.005);
 }
 
 static void	borders(t_mlx_img image)
@@ -113,8 +169,8 @@ void	display_miniMap()
 	int	y;
 	int i;
 
-	img.img_height = (RES_HEIGHT - 50) / 5;
-	img.img_width = (RES_HEIGHT - 50) / 5;
+	img.img_height = (g_cube.res_height - 50) / 5;
+	img.img_width = (g_cube.res_height - 50) / 5;
 	img.img_ptr = mlx_new_image(g_cube.mlx, img.img_height, img.img_width);
 	img.buffer = mlx_get_data_addr(img.img_ptr, &img.bpp, &img.sl, &img.endian);
 	fill_image(img, 0x00323232);
@@ -151,7 +207,7 @@ void	display_miniMap()
 	}
 	
 	borders(img);
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, RES_WIDTH - 25 - img.img_width, RES_HEIGHT * 4 / 5);
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, g_cube.res_width - 25 - img.img_width, g_cube.res_height * 4 / 5);
 	mlx_destroy_image(g_cube.mlx, img.img_ptr);
 }
 
@@ -171,10 +227,10 @@ static void	fill_background()
 	t_mlx_img	img;
 	int			adress;
 
-	img.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
+	img.img_ptr = mlx_new_image(g_cube.mlx, g_cube.res_width, g_cube.res_height);
 	img.buffer = mlx_get_data_addr(img.img_ptr, &img.bpp, &img.sl, &img.endian);
 	adress = -1;
-	while (++adress <= (img.sl / 4) * (RES_HEIGHT))
+	while (++adress <= (img.sl / 4) * (g_cube.res_height))
 		((unsigned int *)img.buffer)[adress - 1] = 0x00bbbbbb;
 	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, 0, 0);
 	mlx_destroy_image(g_cube.mlx, img.img_ptr);
@@ -182,8 +238,8 @@ static void	fill_background()
 
 static void	create_raycast_img()
 {
-	g_cube.img_raycast.img_width = RES_WIDTH - 50;
-	g_cube.img_raycast.img_height = (RES_HEIGHT - 50) * 4 / 5;
+	g_cube.img_raycast.img_width = g_cube.res_width - 50;
+	g_cube.img_raycast.img_height = (g_cube.res_height - 50) * 4 / 5;
 	g_cube.img_raycast.img_ptr = mlx_new_image(g_cube.mlx, g_cube.img_raycast.img_width, g_cube.img_raycast.img_height);
 	g_cube.img_raycast.buffer = mlx_get_data_addr(g_cube.img_raycast.img_ptr, &g_cube.img_raycast.bpp, &g_cube.img_raycast.sl, &g_cube.img_raycast.endian);
 	fill_cell_floor();
@@ -207,7 +263,7 @@ static int	loop_hook()
 void	loopInGame()
 {
 	mlx_do_key_autorepeatoff(g_cube.mlx);
-	mlx_mouse_move(g_cube.win, RES_WIDTH / 2, RES_HEIGHT / 2);
+	mlx_mouse_move(g_cube.win, g_cube.res_width / 2, g_cube.res_height / 2);
 	mlx_mouse_hide();
 	mlx_hook(g_cube.win, 2, 1L << 0, key_press_hook, NULL);
 	mlx_hook(g_cube.win, 3, 1L << 1, key_release_hook, NULL);

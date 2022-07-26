@@ -8,8 +8,9 @@
 void	g_cube_set()
 {
 	g_cube.key_state = 0;
+	g_cube.res_width = 960;
+	g_cube.res_height = 720;
 	g_cube.mlx = mlx_init();
-	g_cube.win = mlx_new_window(g_cube.mlx, RES_WIDTH, RES_HEIGHT, "42-Cube3D");
 	//g_cube.img_onscreen.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
 	
 	// Ici on met les valeurs par defaut du Menu
@@ -18,6 +19,7 @@ void	g_cube_set()
 	g_cube.menu.menu_btn_off.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/Button-Normal.xpm", &g_cube.menu.menu_btn_off.img_width, &g_cube.menu.menu_btn_off.img_height);
 	g_cube.menu.menu_curr = menu;
 	g_cube.menu.max_select = 2;
+	g_cube.win = mlx_new_window(g_cube.mlx, g_cube.res_width, g_cube.res_height, "42-Cube3D");
 }
 
 int	main(int ac, char **av)
@@ -33,6 +35,6 @@ int	main(int ac, char **av)
 		cube_exit(3);
 	loopMenu();
 	mlx_loop(g_cube.mlx);
-	system("leaks cub3D | grep leaked");
+	// system("leaks cub3D | grep leaked");
 	return (0);
 }

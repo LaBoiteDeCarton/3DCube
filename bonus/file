@@ -1,0 +1,7 @@
+Lundi : Hit object de type sprite, obj storage et affichage selon height distance et position
+Mardi : Hit object de type Wall (thin wall) ou Door, storage et affichage selon height distance (affichage selon la direction Verticale et Horizontale)
+Mercredi : Gerer les collisions avec les objets
+Jeudi : Gerer les actions proches des objets : objet type Door -> modifier la position
+		Objet de type collectibles : objet delete et collect++
+Vendredi : Affichage item dans les mains et dans la barre d'affichage. Oyverture porte si ibjet dans les main etc
+Samedi : Release

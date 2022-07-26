@@ -151,7 +151,7 @@ void	raycast();
 	- Display leaks state
 	- Display quit the programm with Success value
 */
-void	cube_exit();
+void	cube_exit(int exit_status);
 
 /*
 	Error displayer

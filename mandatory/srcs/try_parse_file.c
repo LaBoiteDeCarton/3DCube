@@ -33,6 +33,8 @@ int		try_parse_file(char *pathfile)
 
 	// }
 
+	
+
 	//Ici je fait une map a la main, le parsing est a faire.
 	g_cube.curr_map.map = malloc(sizeof(short int *) * 10);
 	for (int i = 0; i < 10; i++)
