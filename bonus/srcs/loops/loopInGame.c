@@ -205,11 +205,13 @@ void	display_miniMap()
 		}
 		y++;
 	}
-	
+	//ici ajouter les objets a mettre sur map
 	borders(img);
 	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, g_cube.res_width - 25 - img.img_width, g_cube.res_height * 4 / 5);
 	mlx_destroy_image(g_cube.mlx, img.img_ptr);
 }
+
+#include <stdio.h>
 
 static void	fill_cell_floor()
 {
@@ -220,6 +222,22 @@ static void	fill_cell_floor()
 		((unsigned int *)g_cube.img_raycast.buffer)[adress] = g_cube.curr_map.cell_color;
 	while (adress++ <= (g_cube.img_raycast.sl / 4) * (g_cube.img_raycast.img_height))
 		((unsigned int *)g_cube.img_raycast.buffer)[adress] = g_cube.curr_map.floor_color;
+	
+	int start;
+	if (g_cube.curr_map.p_dir.y > 0)
+		start = (int)((acosf(g_cube.curr_map.p_dir.x)) * g_cube.curr_map.background.img_width / (M_PI * 2));
+	else
+		start = (int)(((M_PI + M_PI - acosf(g_cube.curr_map.p_dir.x))) * g_cube.curr_map.background.img_width / (M_PI * 2));
+	int i;
+	int j;
+	
+	i = -1;
+	while (++i < (g_cube.img_raycast.img_height))
+	{
+		j = -1;
+		while (++j < (g_cube.img_raycast.img_width))
+			((int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + j] = ((int *)g_cube.curr_map.background.buffer)[i * (g_cube.curr_map.background.sl / 4) + start + j];
+	}
 }
 
 static void	fill_background()

@@ -142,22 +142,24 @@ void	put_coloumn_wall(t_vect *ray, t_vect pos, int wall_id, int coloumn)
 		wall_coloumn = (pos.y - floorf(pos.y)) * mlx_img.img_width;
 	else
 		wall_coloumn = (pos.x - floorf(pos.x)) * mlx_img.img_width;
-	i = (g_cube.img_raycast.img_height / 2) - (wall_size / 2);
+	i = -1;
+	while (++i < (g_cube.img_raycast.img_height / 2) - (wall_size / 2))
+		((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] = g_cube.curr_map.cell_color;
 	while (i < (g_cube.img_raycast.img_height / 2) + (wall_size / 2))
 	{
 		wall_line = (int)((float)(i - ((g_cube.img_raycast.img_height / 2) - (wall_size / 2))) * (float)mlx_img.img_height / (float)wall_size);
 		if (i < g_cube.img_raycast.img_height && i > 0 && wall_coloumn < mlx_img.img_width && wall_line < mlx_img.img_height)
 		{
-			if (((unsigned int *)(mlx_img.buffer))[wall_line  * (mlx_img.sl / 4) + wall_coloumn] != 0x000000b0)
+			if (((unsigned int *)(mlx_img.buffer))[wall_line  * (mlx_img.sl / 4) + wall_coloumn] == 0x001a3b72)
+				((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] += 0x00050510;
+			else if (((unsigned int *)(mlx_img.buffer))[wall_line  * (mlx_img.sl / 4) + wall_coloumn] != 0x00000000)
 				((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] = 
 					((unsigned int *)(mlx_img.buffer))[wall_line  * (mlx_img.sl / 4) + wall_coloumn];
-			else
-				((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] += 
-					0x00000030;
 		}
-
 		i++;
 	}
+	while (i < g_cube.img_raycast.img_height)
+		((unsigned int *)g_cube.img_raycast.buffer)[i++ * (g_cube.img_raycast.sl / 4) + coloumn] = g_cube.curr_map.floor_color;
 }
 #include <stdio.h>
 
@@ -219,28 +221,6 @@ void	put_coloumn_objs(t_vect *ray, t_vect hit, t_obj_hit *all, int i)
 		all = all->next;
 	}
 }
-
-// void	put_ray(t_vect w_pos, t_vect ray, int print_ray)
-// {
-// 	(void)w_pos;
-// 	t_vect p_pos_c;
-
-// 	p_pos_c = g_cube.curr_map.p_pos;
-// 	((unsigned int *)g_cube.img_raycast.buffer)[(int)(w_pos.y * (float)g_cube.curr_map.textures.n_wall.img_height) * (g_cube.img_raycast.sl / 4) + (int)(w_pos.x * (float)g_cube.curr_map.textures.n_wall.img_width)] = 0x00ff0000;
-// 	if (!print_ray)
-// 		return ;
-// 	int i;
-// 	i = 0;
-// 	while (i < 1000)
-// 	{
-// 		p_pos_c.x += ray.x/100;
-// 		p_pos_c.y += ray.y/100;
-// 		if (p_pos_c.x >=0 && p_pos_c.x <= 9 && p_pos_c.y >= 0 && p_pos_c.y <= 9)
-// 			((unsigned int *)g_cube.img_raycast.buffer)[(int)(p_pos_c.y * (float)g_cube.curr_map.textures.n_wall.img_height) * (g_cube.img_raycast.sl / 4) + (int)(p_pos_c.x * (float)g_cube.curr_map.textures.n_wall.img_width)] = 0x000000c6;
-// 		i++;
-// 	}
-// }
-
 
 static t_obj_hit *throw_ray_v_obj(t_obj *obj, t_obj_hit *old, t_vect ray)
 {

@@ -4,6 +4,8 @@
 #include <fcntl.h>
 
 #include <stdio.h>
+#include <math.h>
+#define _USE_MATH_DEFINES
 
 int		try_parse_file(char *pathfile)
 {
@@ -45,16 +47,17 @@ int		try_parse_file(char *pathfile)
 	}
 
 	g_cube.curr_map.map[1][3] = 1;
-	g_cube.curr_map.map[1][7] = 2;
+	g_cube.curr_map.map[1][7] = 3;
 	g_cube.curr_map.map[2][3] = 1;
 	g_cube.curr_map.map[2][7] = 3;
 	g_cube.curr_map.map[2][5] = 1;
+	g_cube.curr_map.map[5][0] = 1;
 	g_cube.curr_map.map_width = 10;
 	g_cube.curr_map.map_height = 10;
 	g_cube.curr_map.p_pos.x = 5;
 	g_cube.curr_map.p_pos.y = 8;
-	g_cube.curr_map.p_dir.x = 0.0;
-	g_cube.curr_map.p_dir.y = -1.;
+	g_cube.curr_map.p_dir.x = cos(3 * M_PI / 2 + 0.0001);
+	g_cube.curr_map.p_dir.y = sin(3 * M_PI / 2 + 0.0001);
 
 	t_walls *wall_ptr;
 	//Le parsing doit aussi pouvir extraire les textures a utiliser
@@ -71,7 +74,7 @@ int		try_parse_file(char *pathfile)
 	wall_ptr = wall_ptr->next;
 	wall_ptr->id = 2;
 	wall_ptr->next = NULL;
-	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/TECH_3E.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
+	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/DOOR_WIND.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
 	wall_ptr->txtr.buffer = mlx_get_data_addr(wall_ptr->txtr.img_ptr, &wall_ptr->txtr.bpp, &wall_ptr->txtr.sl, &wall_ptr->txtr.endian);
 	
 
@@ -80,7 +83,7 @@ int		try_parse_file(char *pathfile)
 	wall_ptr = wall_ptr->next;
 	wall_ptr->id = 3;
 	wall_ptr->next = NULL;
-	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/TECH_2A.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
+	wall_ptr->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/TECH_3E.xpm", &wall_ptr->txtr.img_width, &wall_ptr->txtr.img_height);
 	wall_ptr->txtr.buffer = mlx_get_data_addr(wall_ptr->txtr.img_ptr, &wall_ptr->txtr.bpp, &wall_ptr->txtr.sl, &wall_ptr->txtr.endian);
 
 
@@ -173,6 +176,9 @@ int		try_parse_file(char *pathfile)
 	//on doit set aussi les couleurs de floor et cell
 	g_cube.curr_map.floor_color = 0x00aaaaaa;
 	g_cube.curr_map.cell_color = 0x00303030;
+
+	g_cube.curr_map.background.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, "texture/view.xpm", &g_cube.curr_map.background.img_width, &g_cube.curr_map.background.img_height);
+	g_cube.curr_map.background.buffer = mlx_get_data_addr(g_cube.curr_map.background.img_ptr, &g_cube.curr_map.background.bpp, &g_cube.curr_map.background.sl, &g_cube.curr_map.background.endian);
 
 	//On renvoi 1 si aucune erreur est rencontré. Dans le cas contraire handle error est utilisé et un code retour 0 est envoyé par la fonction
 	return (1);

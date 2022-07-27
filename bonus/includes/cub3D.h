@@ -142,6 +142,7 @@ struct s_map
 	int			map_height;
 	int			floor_color;
 	int			cell_color;
+	t_mlx_img	background;
 	t_walls		*w_txtr;
 	t_obj		*obj;
 };
