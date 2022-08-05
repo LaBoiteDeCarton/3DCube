@@ -5,93 +5,93 @@
 
 static int	key_press_hook(int keycode)
 {
-	//printf("Key pressed : %d\n", keycode);
-	if( keycode == K_Q)
-		bit_set(g_cube.key_state, B_Q);
-	else if( keycode == K_S)
-		bit_set(g_cube.key_state, B_S);
-	else if( keycode == K_D)
-		bit_set(g_cube.key_state, B_D);
-	else if( keycode == K_Z)
-		bit_set(g_cube.key_state, B_Z);
-	else if( keycode == K_A_LEFT)
-		bit_set(g_cube.key_state, B_A_LEFT);
-	else if( keycode == K_A_RIGHT)
-		bit_set(g_cube.key_state, B_A_RIGHT);
+	if (keycode == K_Q)
+		(g_cube.key_state |= 1 << B_Q);
+	else if (keycode == K_S)
+		(g_cube.key_state |= 1 << B_S);
+	else if (keycode == K_D)
+		(g_cube.key_state |= 1 << B_D);
+	else if (keycode == K_Z)
+		(g_cube.key_state |= 1 << B_Z);
+	else if (keycode == K_A_LEFT)
+		(g_cube.key_state |= 1 << B_A_LEFT);
+	else if (keycode == K_A_RIGHT)
+		(g_cube.key_state |= 1 << B_A_RIGHT);
 	else if (keycode == 53)
 		cube_exit(EXIT_SUCCESS);
 	return (0);
 }
 
-static int key_release_hook(int keycode)
+static int	key_release_hook(int keycode)
 {
-	// printf("Key released : %d\n", keycode);
-	if( keycode == K_Q)
-		bit_unset(g_cube.key_state, B_Q);
-	else if( keycode == K_S)
-		bit_unset(g_cube.key_state, B_S);
-	else if( keycode == K_D)
-		bit_unset(g_cube.key_state, B_D);
-	else if( keycode == K_Z)
-		bit_unset(g_cube.key_state, B_Z);
-	else if( keycode == K_A_LEFT)
-		bit_unset(g_cube.key_state, B_A_LEFT);
-	else if( keycode == K_A_RIGHT)
-		bit_unset(g_cube.key_state, B_A_RIGHT);
+	if (keycode == K_Q)
+		(g_cube.key_state ^= 1 << B_Q);
+	else if (keycode == K_S)
+		(g_cube.key_state ^= 1 << B_S);
+	else if (keycode == K_D)
+		(g_cube.key_state ^= 1 << B_D);
+	else if (keycode == K_Z)
+		(g_cube.key_state ^= 1 << B_Z);
+	else if (keycode == K_A_LEFT)
+		(g_cube.key_state ^= 1 << B_A_LEFT);
+	else if (keycode == K_A_RIGHT)
+		(g_cube.key_state ^= 1 << B_A_RIGHT);
 	return (0);
 }
 
-static void	update_cube_data()
+static void	update_cube_data(void)
 {
 	int	x_mouse;
 	int	y_mouse;
 
-	if (bit_is_set(g_cube.key_state, B_Q) && ! bit_is_set(g_cube.key_state, B_D))
+	if ((g_cube.key_state & 1 << B_Q)
+		&& ! (g_cube.key_state & 1 << B_D))
 		move_left();
-	if (bit_is_set(g_cube.key_state, B_D) && ! bit_is_set(g_cube.key_state, B_Q))
+	if ((g_cube.key_state & 1 << B_D)
+		&& ! (g_cube.key_state & 1 << B_Q))
 		move_right();
-	if (bit_is_set(g_cube.key_state, B_S) && ! bit_is_set(g_cube.key_state, B_Z))
+	if ((g_cube.key_state & 1 << B_S)
+		&& ! (g_cube.key_state & 1 << B_Z))
 		move_backward();
-	if (bit_is_set(g_cube.key_state, B_Z) && ! bit_is_set(g_cube.key_state, B_S))
+	if ((g_cube.key_state & 1 << B_Z)
+		&& ! (g_cube.key_state & 1 << B_S))
 		move_forward();
-	if (bit_is_set(g_cube.key_state, B_A_LEFT) && ! bit_is_set(g_cube.key_state, B_A_RIGHT))
+	if ((g_cube.key_state & 1 << B_A_LEFT)
+		&& ! (g_cube.key_state & 1 << B_A_RIGHT))
 		rotate_left();
-	if (bit_is_set(g_cube.key_state, B_A_RIGHT) && ! bit_is_set(g_cube.key_state, B_A_LEFT))
+	if ((g_cube.key_state & 1 << B_A_RIGHT)
+		&& ! (g_cube.key_state & 1 << B_A_LEFT))
 		rotate_right();
 	mlx_mouse_get_pos(g_cube.win, &x_mouse, &y_mouse);
-	mlx_mouse_move(g_cube.win, RES_WIDTH / 2, RES_HEIGHT / 2);
-	rotate((x_mouse - (RES_WIDTH / 2)) * 0.005);
+	mlx_mouse_move(g_cube.win, RES_W / 2, RES_H / 2);
+	rotate((x_mouse - (RES_W / 2)) * 0.005);
 }
 
-static void	fill_cell_floor()
+static int	loop_hook(void)
 {
-	int		adress;
+	t_mlx_img	*img;
+	int			adress;
 
-	adress = -1;
-	while (++adress < (g_cube.img_onload.sl / 4) * RES_HEIGHT / 2)
-		((unsigned int *)g_cube.img_onload.buffer)[adress] = g_cube.curr_map.cell_color;
-	while (adress++ < (g_cube.img_onload.sl / 4) * (RES_HEIGHT - 1))
-		((unsigned int *)g_cube.img_onload.buffer)[adress] = g_cube.curr_map.floor_color;
-}
-
-static int	loop_hook()
-{
 	update_cube_data();
-	g_cube.img_onload.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
-	g_cube.img_onload.buffer = mlx_get_data_addr(g_cube.img_onload.img_ptr, &g_cube.img_onload.bpp, &g_cube.img_onload.sl, &g_cube.img_onload.endian);
-	fill_cell_floor();
+	img = &g_cube.rcimg;
+	img->img_ptr = mlx_new_image(g_cube.mlx, RES_W, RES_H);
+	img->buffer = mlx_get_data_addr(img->img_ptr, &img->bpp, \
+		&img->sl, &img->endian);
+	adress = -1;
+	while (++adress < (img->sl / 4) * RES_H / 2)
+		((int *)img->buffer)[adress] = g_cube.curr_map.cell_color;
+	while (adress++ < (img->sl / 4) * (RES_H - 1))
+		((int *)img->buffer)[adress] = g_cube.curr_map.floor_color;
 	raycast();
-	mlx_put_image_to_window(g_cube.mlx, g_cube.win, g_cube.img_onload.img_ptr, 0, 0);
-	mlx_destroy_image(g_cube.mlx, g_cube.img_onscreen.img_ptr);
-	g_cube.img_onscreen.img_ptr = g_cube.img_onload.img_ptr;
-	g_cube.img_onload.img_ptr = NULL;
+	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img->img_ptr, 0, 0);
+	mlx_destroy_image(g_cube.mlx, img->img_ptr);
 	return (0);
 }
 
-void	loopInGame()
+void	loopInGame(void)
 {
 	mlx_do_key_autorepeatoff(g_cube.mlx);
-	mlx_mouse_move(g_cube.win, RES_WIDTH / 2, RES_HEIGHT / 2);
+	mlx_mouse_move(g_cube.win, RES_W / 2, RES_H / 2);
 	mlx_mouse_hide();
 	mlx_hook(g_cube.win, 2, 1L << 0, key_press_hook, NULL);
 	mlx_hook(g_cube.win, 3, 1L << 1, key_release_hook, NULL);

@@ -2,39 +2,45 @@
 #include <math.h>
 #include <stdio.h>
 
-void	rotate_left()
+void	rotate_left(void)
 {
-	float cosa = cos(-0.05);
-	float sina = sin(-0.05);
-	float new_dirX;
-	float new_dirY;
+	float	cosa;
+	float	sina;
+	float	new_dirX;
+	float	new_dirY;
 
+	cosa = cos(-0.05);
+	sina = sin(-0.05);
 	new_dirX = g_cube.curr_map.p_dir.x * cosa - g_cube.curr_map.p_dir.y * sina;
 	new_dirY = g_cube.curr_map.p_dir.x * sina + g_cube.curr_map.p_dir.y * cosa;
 	g_cube.curr_map.p_dir.x = new_dirX;
 	g_cube.curr_map.p_dir.y = new_dirY;
 }
 
-void	rotate_right()
+void	rotate_right(void)
 {
-	float cosa = cos(0.05);
-	float sina = sin(0.05);
-	float new_dirX;
-	float new_dirY;
+	float	cosa;
+	float	sina;
+	float	new_dirX;
+	float	new_dirY;
 
+	cosa = cos(0.05);
+	sina = sin(0.05);
 	new_dirX = g_cube.curr_map.p_dir.x * cosa - g_cube.curr_map.p_dir.y * sina;
 	new_dirY = g_cube.curr_map.p_dir.x * sina + g_cube.curr_map.p_dir.y * cosa;
 	g_cube.curr_map.p_dir.x = new_dirX;
 	g_cube.curr_map.p_dir.y = new_dirY;
 }
 
-void	rotate(float angle)
+void	rotate(float	angle)
 {
-	float cosa = cos(angle);
-	float sina = sin(angle);
-	float new_dirX;
-	float new_dirY;
+	float	cosa;
+	float	sina;
+	float	new_dirX;
+	float	new_dirY;
 
+	cosa = cos(angle);
+	sina = sin(angle);
 	new_dirX = g_cube.curr_map.p_dir.x * cosa - g_cube.curr_map.p_dir.y * sina;
 	new_dirY = g_cube.curr_map.p_dir.x * sina + g_cube.curr_map.p_dir.y * cosa;
 	g_cube.curr_map.p_dir.x = new_dirX;

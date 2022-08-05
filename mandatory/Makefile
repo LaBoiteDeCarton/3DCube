@@ -9,7 +9,7 @@
 NAME_EXECUTABLE = cub3D
 #	Directory paths
 HEADER_DIRECTORY = includes
-SOURCE_DIRECTORY = srcs srcs/dda srcs/errorHandler srcs/loops srcs/mlxAddons srcs/moves
+SOURCE_DIRECTORY = srcs srcs/dda srcs/errorHandler srcs/loops srcs/moves srcs/parsing2 srcs/draw
 MINILIBX_DIRECTORY = lib/minilibx_opengl
 LIBFT_DIRECTORY = lib/libft
 #	File Objects

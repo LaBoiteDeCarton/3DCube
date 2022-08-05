@@ -5,13 +5,14 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	g_cube_set()
+void	g_cube_set(void)
 {
 	g_cube.key_state = 0;
 	g_cube.mlx = mlx_init();
-	g_cube.win = mlx_new_window(g_cube.mlx, RES_WIDTH, RES_HEIGHT, "42-Cube3D");
-	g_cube.img_onscreen.img_ptr = mlx_new_image(g_cube.mlx, RES_WIDTH, RES_HEIGHT);
-	g_cube.img_onload.img_ptr = NULL;
+	g_cube.win = mlx_new_window(g_cube.mlx, RES_W, RES_H, "42-Cube3D");
+	g_cube.rcimg.img_ptr = NULL;
+	g_cube.curr_map.map = NULL;
+	g_cube.curr_map.p_dir.x = 0.;
 }
 
 int	main(int ac, char **av)
@@ -23,8 +24,8 @@ int	main(int ac, char **av)
 		return (2);
 	}
 	g_cube_set();
-	if( !try_parse_file(av[1]))
-		cube_exit(3);
+	if (!try_parse_file(av[1]))
+		cube_exit(EXIT_FAILURE);
 	loopInGame();
 	mlx_loop(g_cube.mlx);
 	system("leaks cub3D | grep leaked");

@@ -11,6 +11,14 @@ void	rotate_left()
 
 	new_dirX = g_cube.curr_map.p_dir.x * cosa - g_cube.curr_map.p_dir.y * sina;
 	new_dirY = g_cube.curr_map.p_dir.x * sina + g_cube.curr_map.p_dir.y * cosa;
+	if (new_dirX < -1.)
+		new_dirX = -1.;
+	if (new_dirX > 1.)
+		new_dirX = 1.;
+	if (new_dirY < -1.)
+		new_dirY = -1.;
+	if (new_dirY > 1.)
+		new_dirY = 1.;
 	g_cube.curr_map.p_dir.x = new_dirX;
 	g_cube.curr_map.p_dir.y = new_dirY;
 }
@@ -24,6 +32,14 @@ void	rotate_right()
 
 	new_dirX = g_cube.curr_map.p_dir.x * cosa - g_cube.curr_map.p_dir.y * sina;
 	new_dirY = g_cube.curr_map.p_dir.x * sina + g_cube.curr_map.p_dir.y * cosa;
+	if (new_dirX < -1.)
+		new_dirX = -1.;
+	if (new_dirX > 1.)
+		new_dirX = 1.;
+	if (new_dirY < -1.)
+		new_dirY = -1.;
+	if (new_dirY > 1.)
+		new_dirY = 1.;
 	g_cube.curr_map.p_dir.x = new_dirX;
 	g_cube.curr_map.p_dir.y = new_dirY;
 }
@@ -37,6 +53,14 @@ void	rotate(float angle)
 
 	new_dirX = g_cube.curr_map.p_dir.x * cosa - g_cube.curr_map.p_dir.y * sina;
 	new_dirY = g_cube.curr_map.p_dir.x * sina + g_cube.curr_map.p_dir.y * cosa;
+	if (new_dirX < -1.)
+		new_dirX = -1.;
+	if (new_dirX > 1.)
+		new_dirX = 1.;
+	if (new_dirY < -1.)
+		new_dirY = -1.;
+	if (new_dirY > 1.)
+		new_dirY = 1.;
 	g_cube.curr_map.p_dir.x = new_dirX;
 	g_cube.curr_map.p_dir.y = new_dirY;
 }

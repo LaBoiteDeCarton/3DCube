@@ -90,7 +90,7 @@ struct s_obj_hit
 struct s_mlx_img
 {
 	void	*img_ptr;
-	void	*buffer;
+	char	*buffer;
 	int		bpp;
 	int		sl;
 	int		endian;
@@ -118,6 +118,7 @@ typedef enum e_otype
 struct s_obj
 {
 	short		id;
+	char		c_id;
 	t_otype		type;
 	t_vect		start_pos;
 	t_vect		pos;
@@ -131,7 +132,6 @@ struct s_obj
 	t_obj		*next;
 };
 
-
 struct s_map
 {
 	short int	**map;
@@ -143,6 +143,7 @@ struct s_map
 	int			floor_color;
 	int			cell_color;
 	t_mlx_img	background;
+	t_mlx_img	door;
 	t_walls		*w_txtr;
 	t_obj		*obj;
 };
@@ -171,14 +172,19 @@ struct s_cube
 };
 
 /*
-	Parsing function
+	Parsing functions
+	Try_parse_file :
 	- open file refered by pathfile
 	- fill info from file into t_map structure contained in g_cube
 	Return values :
-		- 0 : if something went wrong (unknown pathfile, access permission, not vaid info..)
+		- 0 : if something went wrong (unknown pathfile, 
+			access permission, not vaid info..)
 		- 1 : if parsing was sucessfull
 */
-int		try_parse_file(char *pathfile);
+int				try_parse_file(char *pathfile);
+int				try_parse_element(int fd, char **line);
+int				try_parse_map(int fd, char *line, int width, int height);
+int				is_valid_map(void);
 
 /*
 	Move functions
@@ -224,11 +230,21 @@ void	raycast();
 void	cube_exit(int exit_status);
 
 /*
+	Free_functions - because we want avoid leaks
+
+	free_tab : free each element char* then char** itself
+	free_map : free each short int* representing the map, then short int** itself
+*/
+void			free_tab(char **chartab);
+void			free_map(void);
+
+/*
 	Error displayer
 	- Display on error output in the folowing form :
 		Cub3D: <some custom message>: <perror message>
 */
 void	handle_errors(char *message);
+int		handle_file_errors(char *message);
 
 /* to comment */
 unsigned int	get_time(struct timeval tstart);

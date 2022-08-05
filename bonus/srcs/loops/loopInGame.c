@@ -5,6 +5,22 @@
 #include "mlx.h"
 #include <sys/time.h>
 
+void	my_mlx_pixel_put(t_mlx_img *data, int x, int y, unsigned int color)
+{
+	char	*dst;
+
+	dst = data->buffer + (y * data->sl + x * (data->bpp / 8));
+	*(unsigned int*)dst = color;
+}
+
+unsigned int my_mlx_pixel_get(t_mlx_img *data, int x, int y)
+{
+	char *src;
+
+	src = data->buffer + (y * data->sl + x * (data->bpp / 8));
+	return (*(unsigned int *)src);
+}
+
 static int	key_press_hook(int keycode)
 {
 	//printf("Key pressed : %d\n", keycode);
@@ -215,41 +231,43 @@ void	display_miniMap()
 
 static void	fill_cell_floor()
 {
-	int		adress;
-
-	adress = -1;
-	while (++adress < (g_cube.img_raycast.sl / 4) * g_cube.img_raycast.img_height / 2)
-		((unsigned int *)g_cube.img_raycast.buffer)[adress] = g_cube.curr_map.cell_color;
-	while (adress++ <= (g_cube.img_raycast.sl / 4) * (g_cube.img_raycast.img_height))
-		((unsigned int *)g_cube.img_raycast.buffer)[adress] = g_cube.curr_map.floor_color;
-	
 	int start;
+	unsigned int color;
+	int i;
+	int j;
+	
 	if (g_cube.curr_map.p_dir.y > 0)
 		start = (int)((acosf(g_cube.curr_map.p_dir.x)) * g_cube.curr_map.background.img_width / (M_PI * 2));
 	else
 		start = (int)(((M_PI + M_PI - acosf(g_cube.curr_map.p_dir.x))) * g_cube.curr_map.background.img_width / (M_PI * 2));
-	int i;
-	int j;
-	
-	i = -1;
-	while (++i < (g_cube.img_raycast.img_height))
+	i = 0;
+	while (i < (g_cube.img_raycast.img_height) && i < g_cube.curr_map.background.img_height)
 	{
-		j = -1;
-		while (++j < (g_cube.img_raycast.img_width))
-			((int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + j] = ((int *)g_cube.curr_map.background.buffer)[i * (g_cube.curr_map.background.sl / 4) + start + j];
+		j = 0;
+		while (j < (g_cube.img_raycast.img_width))
+		{
+			color = my_mlx_pixel_get(&(g_cube.curr_map.background), (start + j) % 3503, i);
+			my_mlx_pixel_put(&(g_cube.img_raycast), j, i, color);
+			j++;
+		}
+		i++;
 	}
 }
 
 static void	fill_background()
 {
 	t_mlx_img	img;
-	int			adress;
+	int			offset;
 
 	img.img_ptr = mlx_new_image(g_cube.mlx, g_cube.res_width, g_cube.res_height);
 	img.buffer = mlx_get_data_addr(img.img_ptr, &img.bpp, &img.sl, &img.endian);
-	adress = -1;
-	while (++adress <= (img.sl / 4) * (g_cube.res_height))
-		((unsigned int *)img.buffer)[adress - 1] = 0x00bbbbbb;
+	offset = 0;
+	while (offset < (img.sl / 4) * (g_cube.res_height))
+	{
+		((unsigned int *)img.buffer)[offset] = 0x00bbbbbb;
+		offset++;
+		//((unsigned int *)img.buffer)[adress++] = 0x00bbbbbb;
+	}
 	mlx_put_image_to_window(g_cube.mlx, g_cube.win, img.img_ptr, 0, 0);
 	mlx_destroy_image(g_cube.mlx, img.img_ptr);
 }
