@@ -58,6 +58,7 @@ typedef struct s_mlx_img	t_mlx_img;
 typedef struct s_texture	t_texture;
 typedef struct s_menu		t_menu;
 typedef struct s_obj_hit	t_obj_hit;
+typedef struct s_parse_data	t_parse_data;
 
 t_cube	g_cube;
 
@@ -118,7 +119,6 @@ typedef enum e_otype
 struct s_obj
 {
 	short		id;
-	char		c_id;
 	t_otype		type;
 	t_vect		start_pos;
 	t_vect		pos;
@@ -133,12 +133,23 @@ struct s_obj
 	t_obj		*next;
 };
 
+struct s_parse_data
+{
+	t_otype	type;
+	char			*txtr_path;
+	char			c_id;
+	int				collectibles;
+	t_parse_data	*next;
+};
+
 struct s_map
 {
 	short int	**map;
 	t_vect		p_pos;
 	t_vect		p_dir;
 	t_vect		s_dir;
+	int			collected;
+	int			max_collect;
 	int			map_width;
 	int			map_height;
 	int			floor_color;
@@ -169,6 +180,7 @@ struct s_cube
 	void		*win;
 	t_mlx_img	img_raycast;
 	t_mlx_img	mini_map;
+	t_parse_data	*p_data;
 	int			key_state;
 };
 
@@ -205,6 +217,7 @@ void	move_right();
 void	move_backward();
 void	move_forward();
 void	collision_solver(float *add_to_x, float *add_to_y);
+void	collect_object(t_obj *obj_ptr);
 
 /*
 	Loop hooks seters
@@ -238,6 +251,7 @@ void	cube_exit(int exit_status);
 */
 void			free_tab(char **chartab);
 void			free_map(void);
+void			delete_obj(t_obj *obj_ptr);
 
 /*
 	Error displayer

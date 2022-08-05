@@ -42,5 +42,6 @@ int	try_parse_file(char *pathfile)
 	}
 	free(line);
 	close(fd);
+	g_cube.curr_map.max_collect = 3;
 	return (is_valid_map());
 }

@@ -92,7 +92,7 @@ static int add_new_door_pos(char c, int x, int y)
 static int add_new_obj_pos(char c, int x, int y)
 {
 	t_obj *new;
-	t_obj *ptr;
+	t_parse_data *ptr;
 
 	new = malloc(sizeof(t_obj));
 	if (!new)
@@ -103,21 +103,27 @@ static int add_new_obj_pos(char c, int x, int y)
 	new->start_pos.y = new->pos.y;
 	new->move_dir.x = 0;
 	new->move_dir.y = 0;
-	ptr = g_cube.curr_map.obj;
+	ptr = g_cube.p_data;
 	while (ptr)
 	{
 		if (ptr->c_id == c)
-		{
-			new->txtr = ptr->txtr;
 			break ;
-		}
 		ptr = ptr->next;
 	}
 	if (!ptr)
 	{
 		free(new);
-		return (handle_file_errors("unable to create obj"));
+		return (handle_file_errors("object does not exist"));
 	}
+	new->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, ptr->txtr_path, \
+		&new->txtr.img_width, &new->txtr.img_height);
+	if (!new->txtr.img_ptr )
+	{
+		free(new);
+		return (handle_file_errors("Unable to open xpm file"));
+	}
+	new->txtr.buffer = mlx_get_data_addr(new->txtr.img_ptr, \
+		&new->txtr.bpp, &new->txtr.sl, &new->txtr.endian);
 	new->size = 1;
 	new->type = sprite;
 	if (!g_cube.curr_map.obj)
@@ -137,9 +143,9 @@ static int	is_door(char c)
 
 static int	is_obj(char c)
 {
-	t_obj *ptr;
+	t_parse_data *ptr;
 
-	ptr = g_cube.curr_map.obj;
+	ptr = g_cube.p_data;
 	while (ptr)
 	{
 		if (c == ptr->c_id)
@@ -159,6 +165,8 @@ static int	fill_map_line(char *line, int height)
 
 		if (line[i] == ' ')
 			g_cube.curr_map.map[height][i] = -1;
+		else if (line[i] == 'L')
+			g_cube.curr_map.map[height][i] = 31;
 		else if (line[i] >= '0' && line[i] <= '9')
 			g_cube.curr_map.map[height][i] = line[i] - '0';
 		else if ((line[i] == 'N' || line[i] == 'S' || line[i] == 'E'

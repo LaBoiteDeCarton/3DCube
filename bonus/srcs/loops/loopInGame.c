@@ -113,6 +113,13 @@ static void change_move_state_obj()
 	}
 }
 
+static void end_level()
+{
+	if (g_cube.curr_map.collected >= g_cube.curr_map.max_collect
+		&& g_cube.curr_map.map[(int)g_cube.curr_map.p_pos.y][(int)g_cube.curr_map.p_pos.x] == 31)
+		cube_exit(0);
+}
+
 static void	update_cube_data()
 {
 	int	x_mouse;
@@ -132,6 +139,8 @@ static void	update_cube_data()
 		rotate_right();
 	if (bit_is_set(g_cube.key_state, B_E))
 		change_move_state_obj();
+	if (bit_is_set(g_cube.key_state, B_E))
+		end_level();
 	make_movable_obj_move();
 	mlx_mouse_get_pos(g_cube.win, &x_mouse, &y_mouse);
 	mlx_mouse_move(g_cube.win, g_cube.res_width / 2, g_cube.res_height / 2);

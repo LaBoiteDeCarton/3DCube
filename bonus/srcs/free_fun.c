@@ -1,5 +1,12 @@
 #include "cub3D.h"
 #include <stdlib.h>
+#include "mlx.h"
+
+void	delete_obj(t_obj *obj_ptr)
+{
+	mlx_destroy_image(g_cube.mlx, obj_ptr->txtr.img_ptr);
+	free(obj_ptr);
+}
 
 void	free_tab(char **chartab)
 {

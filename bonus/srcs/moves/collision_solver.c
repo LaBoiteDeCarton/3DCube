@@ -7,18 +7,25 @@ void static	collision_top(float *y, float *posX, float *posY)
 {
 	t_obj	*obj_ptr;
 
-	if (g_cube.curr_map.map[(int)(*posY + *y - 0.4)][(int)(*posX - 0.4)]
-		|| g_cube.curr_map.map[(int)(*posY + *y - 0.4)][(int)(*posX + 0.4)])
+	if ((g_cube.curr_map.map[(int)(*posY + *y - 0.4)][(int)(*posX - 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY + *y - 0.4)][(int)(*posX - 0.4)])
+		|| (g_cube.curr_map.map[(int)(*posY + *y - 0.4)][(int)(*posX + 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY + *y - 0.4)][(int)(*posX + 0.4)]))
 		*y = 0.;
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (!obj_ptr->collectibles && *posY - 0.4 > obj_ptr->pos.y && *posY - 0.4 + *y < obj_ptr->pos.y
+		if (*posY - 0.4 > obj_ptr->pos.y && *posY - 0.4 + *y < obj_ptr->pos.y
 			&& ((*posX - 0.4 > obj_ptr->pos.x - 0.5 && *posX - 0.4 < obj_ptr->pos.x + 0.5)
 			|| (*posX + 0.4 > obj_ptr->pos.x - 0.5 && *posX + 0.4 < obj_ptr->pos.x + 0.5)))
 		{
-			*y = 0.;
-			break ;
+			if (!obj_ptr->collectibles)
+			{
+				*y = 0.;
+				break ;
+			}
+			else
+				collect_object(obj_ptr);
 		}
 		obj_ptr = obj_ptr->next;
 	}
@@ -28,18 +35,25 @@ void static	collision_bottom(float *y, float *posX, float *posY)
 {
 	t_obj	*obj_ptr;
 
-	if (g_cube.curr_map.map[(int)(*posY + *y + 0.4)][(int)(*posX - 0.4)]
-		|| g_cube.curr_map.map[(int)(*posY + *y + 0.4)][(int)(*posX + 0.4)])
+	if ((g_cube.curr_map.map[(int)(*posY + *y + 0.4)][(int)(*posX - 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY + *y + 0.4)][(int)(*posX - 0.4)])
+		|| (g_cube.curr_map.map[(int)(*posY + *y + 0.4)][(int)(*posX + 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY + *y + 0.4)][(int)(*posX + 0.4)]))
 		*y = 0.;
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (!obj_ptr->collectibles && *posY + 0.4 < obj_ptr->pos.y && *posY + 0.4 + *y > obj_ptr->pos.y
+		if (*posY + 0.4 < obj_ptr->pos.y && *posY + 0.4 + *y > obj_ptr->pos.y
 			&& ((*posX - 0.4 > obj_ptr->pos.x - 0.5 && *posX - 0.4 < obj_ptr->pos.x + 0.5)
 			|| (*posX + 0.4 > obj_ptr->pos.x - 0.5 && *posX + 0.4 < obj_ptr->pos.x + 0.5)))
 		{
-			*y = 0.;
-			break ;
+			if (!obj_ptr->collectibles)
+			{
+				*y = 0.;
+				break ;
+			}
+			else
+				collect_object(obj_ptr);
 		}
 		obj_ptr = obj_ptr->next;
 	}
@@ -49,18 +63,25 @@ void static	collision_left(float *x, float *posX, float *posY)
 {
 	t_obj	*obj_ptr;
 
-	if (g_cube.curr_map.map[(int)(*posY + 0.4)][(int)(*posX + *x - 0.4)]
-		|| g_cube.curr_map.map[(int)(*posY - 0.4)][(int)(*posX + *x - 0.4)])
+	if ((g_cube.curr_map.map[(int)(*posY + 0.4)][(int)(*posX + *x - 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY + 0.4)][(int)(*posX + *x - 0.4)])
+		|| (g_cube.curr_map.map[(int)(*posY - 0.4)][(int)(*posX + *x - 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY - 0.4)][(int)(*posX + *x - 0.4)]))
 		*x = 0.;
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (!obj_ptr->collectibles && *posX - 0.4 > obj_ptr->pos.x && *posX - 0.4 + *x < obj_ptr->pos.x
+		if (*posX - 0.4 > obj_ptr->pos.x && *posX - 0.4 + *x < obj_ptr->pos.x
 			&& ((*posY - 0.4 > obj_ptr->pos.y - 0.5 && *posY - 0.4 < obj_ptr->pos.y + 0.5)
 			|| (*posY + 0.4 > obj_ptr->pos.y - 0.5 && *posY + 0.4 < obj_ptr->pos.y + 0.5)))
 		{
-			*x = 0.;
-			break ;
+			if (!obj_ptr->collectibles)
+			{
+				*x = 0.;
+				break ;
+			}
+			else
+				collect_object(obj_ptr);
 		}
 		obj_ptr = obj_ptr->next;
 	}
@@ -70,18 +91,25 @@ void static	collision_right(float *x, float *posX, float *posY)
 {
 	t_obj	*obj_ptr;
 
-	if (g_cube.curr_map.map[(int)(*posY + 0.4)][(int)(*posX + *x + 0.4)]
-		|| g_cube.curr_map.map[(int)(*posY - 0.4)][(int)(*posX + *x + 0.4)])
+	if ((g_cube.curr_map.map[(int)(*posY + 0.4)][(int)(*posX + *x + 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY + 0.4)][(int)(*posX + *x + 0.4)])
+		|| (g_cube.curr_map.map[(int)(*posY - 0.4)][(int)(*posX + *x + 0.4)] < 31
+		&& g_cube.curr_map.map[(int)(*posY - 0.4)][(int)(*posX + *x + 0.4)]))
 		*x = 0.;
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (!obj_ptr->collectibles && *posX + 0.4 < obj_ptr->pos.x && *posX + 0.4 + *x > obj_ptr->pos.x
+		if (*posX + 0.4 < obj_ptr->pos.x && *posX + 0.4 + *x > obj_ptr->pos.x
 			&& ((*posY - 0.4 > obj_ptr->pos.y - 0.5 && *posY - 0.4 < obj_ptr->pos.y + 0.5)
 			|| (*posY + 0.4 > obj_ptr->pos.y - 0.5 && *posY + 0.4 < obj_ptr->pos.y + 0.5)))
 		{
-			*x = 0.;
-			break ;
+			if (!obj_ptr->collectibles)
+			{
+				*x = 0.;
+				break ;
+			}
+			else
+				collect_object(obj_ptr);
 		}
 		obj_ptr = obj_ptr->next;
 	}

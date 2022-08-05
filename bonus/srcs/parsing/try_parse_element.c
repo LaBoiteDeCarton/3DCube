@@ -6,43 +6,26 @@
 #include <stdio.h>
 static int add_obj(char **info)
 {
-	t_obj *new_obj;
+	t_parse_data *new_obj;
 
 	if (!info[0] || !info[1])
 		return (handle_file_errors("Not enough info about the object"));
 	if (ft_strlen(info[1]) != 1)
 		return (handle_file_errors("Invalid obj id"));
-	new_obj = malloc(sizeof(t_obj));
+	new_obj = malloc(sizeof(t_parse_data));
 	if (!new_obj)
 	{
 		handle_errors("unexepcted error when creating object structure");
 		return (0);
 	}
-	new_obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, info[0], \
-		&new_obj->txtr.img_width, &new_obj->txtr.img_height);
-	if (!new_obj->txtr.img_ptr)
-	{
-		free(new_obj);
-		return (handle_file_errors("Unable to open xpm file"));
-	}
-	new_obj->txtr.buffer = mlx_get_data_addr(new_obj->txtr.img_ptr, \
-		&new_obj->txtr.bpp, &new_obj->txtr.sl, &new_obj->txtr.endian);
-	//if (info[2])
-	// ici futur moi va coder les infos supplementaire, si obj est traversable etc
+	new_obj->txtr_path = ft_strdup(info[0]);
 	new_obj->c_id = *(info[1]);
-	if (info[2])
-		printf("info2 : %s\n", info[2]);
 	if (info[2])
 		new_obj->collectibles = ft_atoi(info[2]);
 	else
 		new_obj->collectibles = 0;
-	if (!g_cube.curr_map.obj)
-		new_obj->id = 0;
-	else
-		new_obj->id = g_cube.curr_map.obj->id + 1;
-	new_obj->start_pos.x = -2;
-	new_obj->next = g_cube.curr_map.obj;
-	g_cube.curr_map.obj = new_obj;
+	new_obj->next = g_cube.p_data;
+	g_cube.p_data = new_obj;
 	return (1);
 }
 
