@@ -59,6 +59,7 @@ typedef struct s_texture	t_texture;
 typedef struct s_menu		t_menu;
 typedef struct s_obj_hit	t_obj_hit;
 typedef struct s_parse_data	t_parse_data;
+typedef struct s_entity		t_entity;
 
 t_cube	g_cube;
 
@@ -113,6 +114,7 @@ typedef enum e_otype
 	v_door,
 	h_door,
 	sprite,
+	entity,
 	rien,
 } t_otype;
 
@@ -130,6 +132,7 @@ struct s_obj
 	// float		v_pos;
 	// int			transparency;
 	t_mlx_img	txtr;
+	int			n_sprite;
 	t_obj		*next;
 };
 

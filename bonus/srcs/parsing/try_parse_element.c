@@ -184,6 +184,8 @@ static int	add_element(char **info)
 		return (add_block_texture(info + 1));
 	else if (!ft_strncmp(info[0], "OBJ", 4))
 		return (add_obj(info + 1));
+	else if (!ft_strncmp(info[0], "ENT", 4))
+		return (add_entity(info + 1));
 	else if (!ft_strncmp(info[0], "VWALL", 6))
 		return (add_vwall(info + 1));
 	else if (!ft_strncmp(info[0], "HWALL", 6))
