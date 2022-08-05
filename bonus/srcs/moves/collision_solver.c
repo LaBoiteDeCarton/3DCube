@@ -13,7 +13,7 @@ void static	collision_top(float *y, float *posX, float *posY)
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (*posY - 0.4 > obj_ptr->pos.y && *posY - 0.4 + *y < obj_ptr->pos.y
+		if (!obj_ptr->collectibles && *posY - 0.4 > obj_ptr->pos.y && *posY - 0.4 + *y < obj_ptr->pos.y
 			&& ((*posX - 0.4 > obj_ptr->pos.x - 0.5 && *posX - 0.4 < obj_ptr->pos.x + 0.5)
 			|| (*posX + 0.4 > obj_ptr->pos.x - 0.5 && *posX + 0.4 < obj_ptr->pos.x + 0.5)))
 		{
@@ -34,7 +34,7 @@ void static	collision_bottom(float *y, float *posX, float *posY)
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (*posY + 0.4 < obj_ptr->pos.y && *posY + 0.4 + *y > obj_ptr->pos.y
+		if (!obj_ptr->collectibles && *posY + 0.4 < obj_ptr->pos.y && *posY + 0.4 + *y > obj_ptr->pos.y
 			&& ((*posX - 0.4 > obj_ptr->pos.x - 0.5 && *posX - 0.4 < obj_ptr->pos.x + 0.5)
 			|| (*posX + 0.4 > obj_ptr->pos.x - 0.5 && *posX + 0.4 < obj_ptr->pos.x + 0.5)))
 		{
@@ -55,7 +55,7 @@ void static	collision_left(float *x, float *posX, float *posY)
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (*posX - 0.4 > obj_ptr->pos.x && *posX - 0.4 + *x < obj_ptr->pos.x
+		if (!obj_ptr->collectibles && *posX - 0.4 > obj_ptr->pos.x && *posX - 0.4 + *x < obj_ptr->pos.x
 			&& ((*posY - 0.4 > obj_ptr->pos.y - 0.5 && *posY - 0.4 < obj_ptr->pos.y + 0.5)
 			|| (*posY + 0.4 > obj_ptr->pos.y - 0.5 && *posY + 0.4 < obj_ptr->pos.y + 0.5)))
 		{
@@ -76,7 +76,7 @@ void static	collision_right(float *x, float *posX, float *posY)
 	obj_ptr = g_cube.curr_map.obj;
 	while (obj_ptr)
 	{
-		if (*posX + 0.4 < obj_ptr->pos.x && *posX + 0.4 + *x > obj_ptr->pos.x
+		if (!obj_ptr->collectibles && *posX + 0.4 < obj_ptr->pos.x && *posX + 0.4 + *x > obj_ptr->pos.x
 			&& ((*posY - 0.4 > obj_ptr->pos.y - 0.5 && *posY - 0.4 < obj_ptr->pos.y + 0.5)
 			|| (*posY + 0.4 > obj_ptr->pos.y - 0.5 && *posY + 0.4 < obj_ptr->pos.y + 0.5)))
 		{

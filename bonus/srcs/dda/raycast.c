@@ -143,13 +143,8 @@ void	put_coloumn_wall(t_vect *ray, t_vect pos, int wall_id, int coloumn)
 	else
 		wall_coloumn = (pos.x - floorf(pos.x)) * mlx_img.img_width;
 	i = -1;
-	if (!wall_ptr->outside)
-	{
-		while (++i < (g_cube.img_raycast.img_height / 2) - (wall_size / 2))
+	while (++i < (g_cube.img_raycast.img_height / 2) - (wall_size / 2))
 			((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] = g_cube.curr_map.cell_color;
-	}
-	else
-		i = (g_cube.img_raycast.img_height / 2) - (wall_size / 2);
 	while (i < (g_cube.img_raycast.img_height / 2) + (wall_size / 2))
 	{
 		wall_line = (int)((float)(i - ((g_cube.img_raycast.img_height / 2) - (wall_size / 2))) * (float)mlx_img.img_height / (float)wall_size);

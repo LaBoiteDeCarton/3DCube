@@ -76,6 +76,6 @@ bonus: ${OBJS}
 	@gcc ${COMPILER_FLAGS} ${BONUS_FLAGS} ${LIBRARY_FLAGS} ${OBJS} -o ${NAME_EXECUTABLE}
 
 run: ${NAME_EXECUTABLE}
-	./cub3D maps/simple_map.cub
+	./cub3D maps/level1.cub
 
 .PHONY: all, clean, fclean, re, bonus

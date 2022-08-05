@@ -2,6 +2,8 @@
 #include "libft.h"
 #include "mlx.h"
 
+
+#include <stdio.h>
 static int add_obj(char **info)
 {
 	t_obj *new_obj;
@@ -28,11 +30,93 @@ static int add_obj(char **info)
 	//if (info[2])
 	// ici futur moi va coder les infos supplementaire, si obj est traversable etc
 	new_obj->c_id = *(info[1]);
+	if (info[2])
+		printf("info2 : %s\n", info[2]);
+	if (info[2])
+		new_obj->collectibles = ft_atoi(info[2]);
+	else
+		new_obj->collectibles = 0;
 	if (!g_cube.curr_map.obj)
 		new_obj->id = 0;
 	else
 		new_obj->id = g_cube.curr_map.obj->id + 1;
 	new_obj->start_pos.x = -2;
+	new_obj->next = g_cube.curr_map.obj;
+	g_cube.curr_map.obj = new_obj;
+	return (1);
+}
+
+static int add_vwall(char **info)
+{
+	t_obj *new_obj;
+
+	if (!info[0] || !info[1])
+		return (handle_file_errors("Not enough info about the object"));
+	new_obj = malloc(sizeof(t_obj));
+	if (!new_obj)
+	{
+		handle_errors("unexepcted error when creating object structure");
+		return (0);
+	}
+	new_obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, info[0], \
+		&new_obj->txtr.img_width, &new_obj->txtr.img_height);
+	if (!new_obj->txtr.img_ptr)
+	{
+		free(new_obj);
+		return (handle_file_errors("Unable to open xpm file"));
+	}
+	new_obj->txtr.buffer = mlx_get_data_addr(new_obj->txtr.img_ptr, \
+		&new_obj->txtr.bpp, &new_obj->txtr.sl, &new_obj->txtr.endian);
+	//if (info[2])
+	// ici futur moi va coder les infos supplementaire, si obj est traversable etc
+	new_obj->type = v_wall;
+	new_obj->pos.x = (float)ft_atoi(info[1]) + 0.5;
+	new_obj->pos.y = (float)ft_atoi(info[2]) + 0.5;
+	new_obj->start_pos.x = new_obj->pos.x;
+	new_obj->start_pos.y = new_obj->pos.y;
+	new_obj->size = 1;
+	if (!g_cube.curr_map.obj)
+		new_obj->id = 0;
+	else
+		new_obj->id = g_cube.curr_map.obj->id + 1;
+	new_obj->next = g_cube.curr_map.obj;
+	g_cube.curr_map.obj = new_obj;
+	return (1);
+}
+
+static int add_hwall(char **info)
+{
+	t_obj *new_obj;
+
+	if (!info[0] || !info[1])
+		return (handle_file_errors("Not enough info about the object"));
+	new_obj = malloc(sizeof(t_obj));
+	if (!new_obj)
+	{
+		handle_errors("unexepcted error when creating object structure");
+		return (0);
+	}
+	new_obj->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, info[0], \
+		&new_obj->txtr.img_width, &new_obj->txtr.img_height);
+	if (!new_obj->txtr.img_ptr)
+	{
+		free(new_obj);
+		return (handle_file_errors("Unable to open xpm file"));
+	}
+	new_obj->txtr.buffer = mlx_get_data_addr(new_obj->txtr.img_ptr, \
+		&new_obj->txtr.bpp, &new_obj->txtr.sl, &new_obj->txtr.endian);
+	//if (info[2])
+	// ici futur moi va coder les infos supplementaire, si obj est traversable etc
+	new_obj->type = h_wall;
+	new_obj->pos.x = ft_atoi(info[1]) + 0.5;
+	new_obj->pos.y = ft_atoi(info[2]) + 0.5;
+	new_obj->start_pos.x = new_obj->pos.x;
+	new_obj->start_pos.y = new_obj->pos.y;
+	new_obj->size = 1;
+	if (!g_cube.curr_map.obj)
+		new_obj->id = 0;
+	else
+		new_obj->id = g_cube.curr_map.obj->id + 1;
 	new_obj->next = g_cube.curr_map.obj;
 	g_cube.curr_map.obj = new_obj;
 	return (1);
@@ -104,8 +188,6 @@ static int	add_block_texture(char **info)
 	new_wall->txtr.buffer = mlx_get_data_addr(new_wall->txtr.img_ptr, \
 		&new_wall->txtr.bpp, &new_wall->txtr.sl, &new_wall->txtr.endian);
 	new_wall->id = atoi(info[1]);
-	if (info[2])
-		new_wall->outside = ft_atoi(info[2]);
 	new_wall->next = g_cube.curr_map.w_txtr;
 	g_cube.curr_map.w_txtr = new_wall;
 	return (1);
@@ -119,6 +201,10 @@ static int	add_element(char **info)
 		return (add_block_texture(info + 1));
 	else if (!ft_strncmp(info[0], "OBJ", 4))
 		return (add_obj(info + 1));
+	else if (!ft_strncmp(info[0], "VWALL", 6))
+		return (add_vwall(info + 1));
+	else if (!ft_strncmp(info[0], "HWALL", 6))
+		return (add_hwall(info + 1));
 	else if (!ft_strncmp(info[0], "DOOR", 5))
 		return (add_door(info + 1));
 	else if (!ft_strncmp(info[0], "F", 2))
@@ -133,7 +219,7 @@ static int	is_map(char *line)
 {
 	while (*line == ' ')
 		line++;
-	if (*line == '0' || *line == '1')
+	if (*line == '0' || *line == '1' || *line == '3')
 		return (1);
 	return (0);
 }

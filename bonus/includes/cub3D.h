@@ -102,7 +102,6 @@ struct s_walls
 {
 	short		id;
 	t_mlx_img	txtr;
-	int			outside;
 	t_walls		*next;
 };
 
@@ -127,8 +126,9 @@ struct s_obj
 	struct timeval time;
 	int			bool_move;
 	float		size;
-	float		v_pos;
-	int			transparency;
+	int			collectibles;
+	// float		v_pos;
+	// int			transparency;
 	t_mlx_img	txtr;
 	t_obj		*next;
 };

@@ -125,6 +125,7 @@ static int add_new_obj_pos(char c, int x, int y)
 	else
 		new->id = g_cube.curr_map.obj->id + 1;
 	new->next = g_cube.curr_map.obj;
+	new->collectibles = ptr->collectibles;
 	g_cube.curr_map.obj = new;
 	return (1);
 }
