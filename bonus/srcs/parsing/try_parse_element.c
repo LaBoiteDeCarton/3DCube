@@ -29,6 +29,31 @@ static int add_obj(char **info)
 	return (1);
 }
 
+static int add_obj(char **info)
+{
+	t_parse_data *new_obj;
+
+	if (!info[0] || !info[1])
+		return (handle_file_errors("Not enough info about the object"));
+	if (ft_strlen(info[1]) != 1)
+		return (handle_file_errors("Invalid obj id"));
+	new_obj = malloc(sizeof(t_parse_data));
+	if (!new_obj)
+	{
+		handle_errors("unexepcted error when creating object structure");
+		return (0);
+	}
+	new_obj->txtr_path = ft_strdup(info[0]);
+	new_obj->c_id = *(info[1]);
+	if (info[2])
+		new_obj->collectibles = ft_atoi(info[2]);
+	else
+		new_obj->collectibles = 0;
+	new_obj->next = g_cube.p_data;
+	g_cube.p_data = new_obj;
+	return (1);
+}
+
 static int add_vwall(char **info)
 {
 	t_obj *new_obj;
