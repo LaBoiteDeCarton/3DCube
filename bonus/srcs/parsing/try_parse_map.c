@@ -1,5 +1,6 @@
 #include "cub3D.h"
 #include "libft.h"
+#include "mlx.h"
 #include <stdlib.h>
 #include <math.h>
 #define	_USE_MATH_DEFINES
@@ -72,7 +73,13 @@ static int add_new_door_pos(char c, int x, int y)
 		new->move_dir.x = -1;
 		new->move_dir.y = 0;
 	}
-	new->txtr = g_cube.curr_map.door;
+	new->txtr.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, g_cube.curr_map.door, \
+		&new->txtr.img_width, &new->txtr.img_height);
+	if (!new->txtr.img_ptr)
+		return (handle_file_errors("Unable to open xpm file"));
+	new->txtr.buffer = mlx_get_data_addr(new->txtr.img_ptr, \
+		&new->txtr.bpp, &new->txtr.sl, &new->txtr.endian);
+	new->size = 1;
 	if (!g_cube.curr_map.obj)
 		new->id = 0;
 	else
@@ -111,6 +118,8 @@ static int add_new_obj_pos(char c, int x, int y)
 		free(new);
 		return (handle_file_errors("unable to create obj"));
 	}
+	new->size = 1;
+	new->type = sprite;
 	if (!g_cube.curr_map.obj)
 		new->id = 0;
 	else

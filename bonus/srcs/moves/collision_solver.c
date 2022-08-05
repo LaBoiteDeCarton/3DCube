@@ -17,7 +17,6 @@ void static	collision_top(float *y, float *posX, float *posY)
 			&& ((*posX - 0.4 > obj_ptr->pos.x - 0.5 && *posX - 0.4 < obj_ptr->pos.x + 0.5)
 			|| (*posX + 0.4 > obj_ptr->pos.x - 0.5 && *posX + 0.4 < obj_ptr->pos.x + 0.5)))
 		{
-			printf("collision\n");
 			*y = 0.;
 			break ;
 		}
@@ -39,7 +38,6 @@ void static	collision_bottom(float *y, float *posX, float *posY)
 			&& ((*posX - 0.4 > obj_ptr->pos.x - 0.5 && *posX - 0.4 < obj_ptr->pos.x + 0.5)
 			|| (*posX + 0.4 > obj_ptr->pos.x - 0.5 && *posX + 0.4 < obj_ptr->pos.x + 0.5)))
 		{
-			printf("collision\n");
 			*y = 0.;
 			break ;
 		}
@@ -61,7 +59,6 @@ void static	collision_left(float *x, float *posX, float *posY)
 			&& ((*posY - 0.4 > obj_ptr->pos.y - 0.5 && *posY - 0.4 < obj_ptr->pos.y + 0.5)
 			|| (*posY + 0.4 > obj_ptr->pos.y - 0.5 && *posY + 0.4 < obj_ptr->pos.y + 0.5)))
 		{
-			printf("collision\n");
 			*x = 0.;
 			break ;
 		}
@@ -83,7 +80,6 @@ void static	collision_right(float *x, float *posX, float *posY)
 			&& ((*posY - 0.4 > obj_ptr->pos.y - 0.5 && *posY - 0.4 < obj_ptr->pos.y + 0.5)
 			|| (*posY + 0.4 > obj_ptr->pos.y - 0.5 && *posY + 0.4 < obj_ptr->pos.y + 0.5)))
 		{
-			printf("collision\n");
 			*x = 0.;
 			break ;
 		}

@@ -143,8 +143,13 @@ void	put_coloumn_wall(t_vect *ray, t_vect pos, int wall_id, int coloumn)
 	else
 		wall_coloumn = (pos.x - floorf(pos.x)) * mlx_img.img_width;
 	i = -1;
-	while (++i < (g_cube.img_raycast.img_height / 2) - (wall_size / 2))
-		((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] = g_cube.curr_map.cell_color;
+	if (!wall_ptr->outside)
+	{
+		while (++i < (g_cube.img_raycast.img_height / 2) - (wall_size / 2))
+			((unsigned int *)g_cube.img_raycast.buffer)[i * (g_cube.img_raycast.sl / 4) + coloumn] = g_cube.curr_map.cell_color;
+	}
+	else
+		i = (g_cube.img_raycast.img_height / 2) - (wall_size / 2);
 	while (i < (g_cube.img_raycast.img_height / 2) + (wall_size / 2))
 	{
 		wall_line = (int)((float)(i - ((g_cube.img_raycast.img_height / 2) - (wall_size / 2))) * (float)mlx_img.img_height / (float)wall_size);
@@ -187,7 +192,7 @@ void	put_coloumn_obj(t_vect *ray, t_vect pos, int obj_id, int coloumn)
 	obj_size = (int)(obj_ptr->size * (float)g_cube.img_raycast.img_width / (2.5 * fraction * tan(M_PI / 6)));
 	i = (g_cube.img_raycast.img_height / 2) - (obj_size / 2);
 	if (obj_ptr->type == v_wall || obj_ptr->type == v_door)
-		wall_coloumn = (pos.y - floorf(pos.y)) * mlx_img.img_width;
+		wall_coloumn = (obj_ptr->pos.y - pos.y + 0.5) * mlx_img.img_width;
 	else if (obj_ptr->type == h_wall || obj_ptr->type == h_door)
 		wall_coloumn = (obj_ptr->pos.x - pos.x + 0.5) * mlx_img.img_width;
 	else if ((obj_ptr->pos.x - g_cube.curr_map.p_pos.x) * (pos.y - g_cube.curr_map.p_pos.y)

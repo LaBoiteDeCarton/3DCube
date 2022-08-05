@@ -40,12 +40,13 @@ static int add_obj(char **info)
 
 static int	add_door(char **info)
 {
-	g_cube.curr_map.door.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, info[0], \
-		&g_cube.curr_map.door.img_width, &g_cube.curr_map.door.img_height);
-	if (!g_cube.curr_map.door.img_ptr)
-		return (handle_file_errors("Unable to open xpm file"));
-	g_cube.curr_map.door.buffer = mlx_get_data_addr(g_cube.curr_map.door.img_ptr, \
-		&g_cube.curr_map.door.bpp, &g_cube.curr_map.door.sl, &g_cube.curr_map.door.endian);
+	g_cube.curr_map.door = ft_strdup(*info);
+	// g_cube.curr_map.door.img_ptr = mlx_xpm_file_to_image(g_cube.mlx, info[0], \
+	// 	&g_cube.curr_map.door.img_width, &g_cube.curr_map.door.img_height);
+	// if (!g_cube.curr_map.door.img_ptr)
+	// 	return (handle_file_errors("Unable to open xpm file"));
+	// g_cube.curr_map.door.buffer = mlx_get_data_addr(g_cube.curr_map.door.img_ptr, \
+	// 	&g_cube.curr_map.door.bpp, &g_cube.curr_map.door.sl, &g_cube.curr_map.door.endian);
 	return (1);
 }
 
@@ -103,6 +104,8 @@ static int	add_block_texture(char **info)
 	new_wall->txtr.buffer = mlx_get_data_addr(new_wall->txtr.img_ptr, \
 		&new_wall->txtr.bpp, &new_wall->txtr.sl, &new_wall->txtr.endian);
 	new_wall->id = atoi(info[1]);
+	if (info[2])
+		new_wall->outside = ft_atoi(info[2]);
 	new_wall->next = g_cube.curr_map.w_txtr;
 	g_cube.curr_map.w_txtr = new_wall;
 	return (1);

@@ -102,6 +102,7 @@ struct s_walls
 {
 	short		id;
 	t_mlx_img	txtr;
+	int			outside;
 	t_walls		*next;
 };
 
@@ -143,7 +144,7 @@ struct s_map
 	int			floor_color;
 	int			cell_color;
 	t_mlx_img	background;
-	t_mlx_img	door;
+	char		*door;
 	t_walls		*w_txtr;
 	t_obj		*obj;
 };
